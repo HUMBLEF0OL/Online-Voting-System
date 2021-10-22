@@ -1,0 +1,38 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "filesys.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "check-disk-space": "^3.0.1",
+    "connect-flash": "^0.1.1",
+    "cpu-percentage": "^1.0.3",
+    "date-format": "^3.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.2",
+    "fast-two-sms": "^3.0.0",
+    "fs": "0.0.1-security",
+    "generate-password": "^1.6.1",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.0.7",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.0",
+    "passport": "^0.5.0",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0"
+  }
+}

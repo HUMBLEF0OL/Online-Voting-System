@@ -1,0 +1,370 @@
+const express = require("express");
+const db = require('../../../models');
+const fast2sms = require('fast-two-sms')
+const _ = require('lodash'); 
+
+const candidate_register_get =  async function(req,res)
+{
+
+  const elections = await db.election_data.findAll({
+    where: {
+      status: "not_started"
+    },
+    order:  [['election_id', 'DESC']]
+
+  });
+  res.render('./election_admin/candidates/reg1',{elections,alertsm : ""});
+  
+}
+
+
+
+
+
+const candidate_register_get2 =  async function(req,res)
+{
+  
+   var eid=req.params.eid;
+  try {
+
+    const positions = await db.position_data.findAll({
+      where: {
+        election_id: eid
+      },
+      order:  [['position_name', 'ASC']]
+  
+    });
+    
+ 
+      res.render('./election_admin/candidates/reg2',{positions,eid,alerte:"",alertsm : ""});
+        //res.send(positions);
+
+  } catch (error) 
+  {
+  
+     console.log(error);
+  }
+   
+
+
+  
+  
+}
+
+
+//save position details
+
+const save_candidate= async function(req,res){
+
+  var params = req.body
+  var eid=params.election_id;
+
+
+ 
+  
+  console.log(params);
+  
+ 
+ //validate user detail   
+ const users = await db.user_data.findOne({
+  where: {
+    identification: req.body.identification
+  }
+
+})
+ 
+if (_.isEmpty(users))
+{
+
+
+  const positions = await db.position_data.findAll({
+    where: {
+      election_id: eid
+    },
+    order:  [['position_name', 'ASC']]
+
+  });
+  res.render('./election_admin/candidates/reg2',{eid,positions,alerte:"Error! User not Found",alertsm : ""});
+
+}
+else {
+
+  params.user_id=users.user_id;
+
+  console.log(params);
+  
+  //saving election data to database
+  await db.candidate_data.create(params).catch(function(err){
+    console.log(err)
+    });
+
+    const positions = await db.position_data.findAll({
+      where: {
+        election_id: eid
+      },
+      order:  [['position_name', 'ASC']]
+  
+    });
+    
+ 
+      res.render('./election_admin/candidates/reg2',{positions,eid,alerte:"",alertsm : "Candidate Registered Successfully"});
+        //res.send(positions);
+
+
+ 
+  }
+
+ 
+}
+
+
+
+//candidate manager
+const manage = async function(req,res)
+{
+
+    
+  var eid=req.params.eid;
+
+  
+
+  const positions = await db.position_data.findAll({
+    include: ['candidate','election'] ,  required: true , where :{ election_id : eid} 
+  });
+
+    
+     //res.send(positions);
+    res.render('./election_admin/candidates/manage',{positions,alertsm : ""});
+  
+}
+
+
+//candidate manager2
+const manage2 = async function(req,res)
+{
+
+    
+  var pid=req.params.pid;
+
+  
+
+  const candidates = await db.candidate_data.findAll({
+    include: ['position','user_info'] ,  required: true , where :{ position_id : pid} 
+  });
+
+    
+     //res.send(positions);
+    res.render('./election_admin/candidates/manage2',{candidates,alertsm : ""});
+  
+}
+
+
+
+
+
+
+
+
+
+//delete election
+const delete_candidate = async function(req,res)
+{
+    var cid=req.params.cid;
+    var pid=req.params.pid;
+  
+    
+    try
+    {
+      await db.candidate_data.destroy(
+      {
+        where: { candidate_id: cid }
+      })
+
+      const candidates = await db.candidate_data.findAll({
+        include: ['position','user_info'] ,  required: true , where :{ position_id : pid} 
+      });
+    
+        
+     
+        res.render('./election_admin/candidates/manage2',{candidates,alertsm : "Candidate Deleted Successfully"});
+  
+
+    }catch(err){console.log(err)}
+     
+   
+}
+
+
+
+
+
+//update candidate
+
+const update_candidate_get =  async function(req,res)
+{
+  
+   var eid=req.params.eid;
+   var cid=req.params.cid;
+   var uid=req.params.uid;
+  try {
+
+    const positions = await db.position_data.findAll({
+      where: {
+        election_id: eid
+      },
+      order:  [['position_name', 'ASC']]
+  
+    });
+    
+
+    const user_details = await db.user_data.findOne({
+      where: {
+        user_id: uid
+      }
+
+    });
+
+    
+ 
+      res.render('./election_admin/candidates/update_f',{user_details,positions,cid,eid,alerte:"",alertsm : ""});
+        //res.send(positions);
+
+  } catch (error) 
+  {
+  
+     console.log(error);
+  }
+   
+
+
+  
+  
+}
+
+//update  candidate
+
+const update_candidate= async function(req,res)
+{
+
+    
+
+  try
+
+{
+   await db.candidate_data.update(
+    {
+      position_id: req.body.position_id 
+    },
+    {
+      where: { candidate_id: req.body.candidate_id }
+    });
+
+
+
+    const positions = await db.position_data.findAll({
+      include: ['candidate','election'] ,  required: true , where :{ election_id : req.body.election_id } 
+    });
+  
+      
+       //res.send(positions);
+      res.render('./election_admin/candidates/manage',{positions,alertsm : "Candidate Updated Successfully"});
+ 
+
+
+  }catch(err){console.log(err);}
+
+}
+
+
+//view all
+
+const view_all =  async function(req,res)
+{
+  
+   var eid=req.params.eid;
+  try {
+
+    const positions = await db.position_data.findAll({
+      where: {
+        election_id: eid
+      },
+      include :
+      {
+        model: db.candidate_data, as: 'candidate',
+        include : { 
+          model: db.user_data, as: 'user_info'
+        }
+      },
+      order:  [['position_name', 'ASC']]
+    });
+
+
+    const disqualified = await db.candidate_data.count({
+      where: {
+        election_id: eid , status:'disqualified'
+      }
+    });
+
+ 
+      res.render('./election_admin/candidates/view',{ disqualified,positions,eid,alerte:"",alertsm : ""});
+        
+  //       res.send(positions);
+
+  } catch (error) 
+  {
+  
+     console.log(error);
+  }
+   
+
+
+  
+  
+}
+
+
+
+
+//Disqualify  candidate
+
+const disqualify_candidate= async function(req,res)
+{
+
+    
+
+  try
+
+{
+   await db.candidate_data.update(
+    {
+      status:'disqualified'  
+    },
+    {
+      where: { candidate_id: req.params.cid }
+    });
+
+
+
+    const positions = await db.position_data.findAll({
+      include: ['candidate','election'] ,  required: true , where :{ election_id : req.params.eid } 
+    });
+  
+      
+       //res.send(positions);
+      res.render('./election_admin/candidates/manage',{positions,alertsm : "Candidate Disqualified Successfully"});
+ 
+
+
+  }catch(err){console.log(err);}
+
+}
+
+
+
+
+
+
+
+
+
+module.exports= {disqualify_candidate,view_all,candidate_register_get,candidate_register_get2,save_candidate,manage,manage2,delete_candidate,update_candidate_get,update_candidate}
