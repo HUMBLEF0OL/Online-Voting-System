@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Schedule Election</title>
+    <title>Dashboard</title>
     <!-- Required meta tags -->
     <%- include('../partials/head.ejs') %>
   </head>
@@ -200,10 +200,8 @@
                     <tr>
                   
                       <th style="width:5%"> Election Title </th>
-                      <th style="width:5%"> Start Date </th>
-                      <th style="width:5%"> Start Time </th>
-                      <th style="width:5%"> Stop Date </th>
-                      <th style="width:5%"> Stop Time </th>
+                      <th style="width:5%"> Start Date and Time</th>
+                      <th style="width:5%"> Stop Date and Time</th>
                       <th style="width:5%"> Date Registered </th>
                       <th style="width:5%"> Status </th>
                       <th style="width:5%"> Info </th>
@@ -255,10 +253,8 @@
                     <tr>
                     
                       <td> <%= election.title %> </td>
-                      <td> <%= dateconversion(election.start_date) %> </td>
-                      <td> <%= election.start_time %> </td>
-                      <td> <%= dateconversion(election.stop_date) %> </td>
-                      <td> <%= election.stop_time %> </td>
+                      <td> <%= dateconversion(election.start_date) %> &nbsp;|&nbsp;<%= election.start_time %></td>
+                      <td> <%= dateconversion(election.stop_date) %>&nbsp;|&nbsp;<%= election.stop_time %> </td>
                       <td> <%= dateconversion(election.createdAt) %> </td>
                       <td> <div class="<%= class_css %> "><%= status_value %></div>
                        
