@@ -21,7 +21,21 @@ const positions_register_get2 =  async function(req,res)
 {
   
   var eid=req.params.eid;
-  res.render('./election_admin/positions/reg2',{eid,alertsm : ""});
+
+  const positions = await db.position_data.findAll({
+    where: {
+      election_id: eid
+    }
+    ,include: ['election']
+    
+  });
+  const election_title = await db.election_data.findOne({
+    where: {
+      election_id: eid
+    }
+    
+  });
+  res.render('./election_admin/positions/reg2',{eid,positions,election_title,alertsm : ""});
   
 }
 
@@ -90,26 +104,53 @@ const delete_position = async function(req,res)
 
 const save = async function(req,res){
 
+  var temp = req.body.position_name;
   var params = req.body
-  
-  console.log(params);
-  
-  //saving election data to database
-  db.position_data.create(params).catch(function(err){
-    console.log(err)
-    });
- 
+  var eid=req.params.eid;
+  const existing = await db.position_data.findAll({
+    where:{
+      election_id:eid,
+      position_name:temp
+    }
+  });
+  if(existing.length<1){
+      db.position_data.create(params).catch(function(err){
+        console.log(err)
+        });
 
-
- //save positions to database   
-    const elections = await db.election_data.findAll({
+      const positions = await db.position_data.findAll({
+        where: {
+          election_id: eid
+        }
+        ,include: ['election']
+        
+      });
+      const election_title = await db.election_data.findOne({
+        where: {
+          election_id: eid
+        }
+        
+      });
+      res.render('./election_admin/positions/reg2',{eid,positions,election_title,alertsm : "New position added!"});
+  }
+  else{
+    const positions = await db.position_data.findAll({
       where: {
-        status: "not_started"
-      },
-      order:  [['election_id', 'DESC']]
-  
+        election_id: eid
+      }
+      ,include: ['election']
+      
     });
-    res.render('./election_admin/positions/reg1',{elections,alertsm : "Election Position has been registered successfully"});
+    const election_title = await db.election_data.findOne({
+      where: {
+        election_id: eid
+      }
+      
+    });
+    res.render('./election_admin/positions/reg2',{eid,positions,election_title,alertsm : "Position already Exists!"});
+  }
+
+
 }
 
 

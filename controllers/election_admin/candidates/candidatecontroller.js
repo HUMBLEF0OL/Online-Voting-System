@@ -20,7 +20,6 @@ const candidate_register_get =  async function(req,res)
 
 
 
-
 const candidate_register_get2 =  async function(req,res)
 {
   

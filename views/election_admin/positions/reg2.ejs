@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Schedule Election</title>
+    <title>Register Position</title>
     <!-- Required meta tags -->
     <%- include('../partials/head.ejs') %>
   </head>
@@ -52,14 +52,36 @@
                   </div>
                 </div>
               </div>
-          
+              <%
+
+              if(alertsm.length==19)
+              {
+        
+        
+        %>
+              
+        
+                 <div class="alert alert-success" style="text-align: center;">
+                    <strong> Success: </strong><%= alertsm %>
+                  </div>
+                  <br /><br />
+                  <%
+                
+                
+              }else if(alertsm.length==24){%>
+                <div class="alert alert-danger" style="text-align: center;">
+                    <strong> Failed: </strong><%= alertsm %>
+                  </div>
+                  <br /><br />
+                  <% }%>
+
             <br />            
             <div class="row">
               <div class="col-lg-8 mx-auto">
                 <div class="card">
                   <div class="card-body">
                    
-                    <form action="/position/save" method="POST" enctype="application/x-www-form-urlencoded">
+                    <form action="/position/save/<%= eid %>" method="POST" enctype="application/x-www-form-urlencoded">
                       
                       <input type="hidden" id="custId" name="election_id" value="<%= eid %>">
                       
@@ -82,6 +104,96 @@
           <!-- partial:../../partials/_footer.html -->
 
           <!-- partial -->
+        </div>
+        <div class="row">
+          <div class="content-wrapper">
+           
+
+          <br />
+          
+
+
+      <%
+
+          if(positions.length<1)
+          {
+          %>
+
+          <div class="alert alert-warning" role="alert" style="text-align: center;">
+            No existing position registered for this election!
+          </div>
+
+
+          <%
+          
+
+          }
+          else
+
+          {
+            
+ 
+
+        %>  
+          <div class="row">
+           
+            <div class="col-lg-8 mx-auto">
+              <div class="card">
+                <div class="card-body">
+                  <h4>Existing Positions for <%= election_title.title %></h4>
+
+
+                  <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                      <thead>
+                        <tr>
+                        
+                          <th style="width:5%"> Position </th>
+                          <th style="width:5%"> Election ID </th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+            
+            <%
+                       
+                        
+                       //date conversion function
+
+                       function dateconversion(date_value)
+                       {
+                     
+                        var formattedDate = date_value.toLocaleDateString('en-GB', {
+                        day: 'numeric', month: 'short', year: 'numeric'
+                         }).replace(/ /g, '-');
+
+                         return formattedDate;
+                      }
+
+
+                        positions.forEach(function(position){
+                        
+
+            %>
+                        <tr>                            
+                          <td> <%= position.position_name %> </td>
+                          <td> <%= dateconversion(position.createdAt) %> </td>
+        
+
+                        </tr>
+                        <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+          </div>
+       
+        </div>
+
+        <% }%>
         </div>
         <!-- main-panel ends -->
       </div>
