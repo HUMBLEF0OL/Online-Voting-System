@@ -282,11 +282,12 @@ const save = function (req, res) {
 
   var params = req.body
   // finding all the elections with the same name
-  const existing_election = db.election_data.findOne({
+  const existing_election = db.election_data.findAll({
     where: {
-      title: req.body.title
+      title: req.body.title,
     }
   });
+  console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+existing_election.length+"\n\n\n\n\n\n\n\n"+req.body.title);
 
   params.otp = otp_pin
   params.election_display_id = eid
