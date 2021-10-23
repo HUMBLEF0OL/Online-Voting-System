@@ -38,6 +38,9 @@ router.get('/dashboard',electioncontroller.isAuthenticated,electioncontroller.el
 //Election Specific  Dashboard
 
 router.get('/dashboard/:eid',electioncontroller.isAuthenticated,electioncontroller.election_dashboard_view);  
+router.get('/viewelection/:eid',electioncontroller.isAuthenticated,electioncontroller.election_dashboard_view);  
+
+
 
 router.get('/eview/:eid',electioncontroller.isAuthenticated,electioncontroller.election_dashboard_view); 
 
