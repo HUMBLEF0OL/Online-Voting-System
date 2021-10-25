@@ -40,6 +40,7 @@ router.get('/dashboard',electioncontroller.isAuthenticated,electioncontroller.el
 router.get('/dashboard/:eid',electioncontroller.isAuthenticated,electioncontroller.election_dashboard_view);  
 router.get('/viewelection/:eid',electioncontroller.isAuthenticated,electioncontroller.election_dashboard_view);  
 
+
 router.get('/eview/:eid',electioncontroller.isAuthenticated,electioncontroller.election_dashboard_view); 
 
  module.exports  = router
