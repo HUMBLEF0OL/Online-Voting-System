@@ -11,7 +11,7 @@ router.get('/register2/:eid', isAuthenticated, positionscontroller.positions_reg
 
 
 //adding data to the database
-router.post('/save', isAuthenticated, positionscontroller.save);
+router.post('/save/:eid', isAuthenticated, positionscontroller.save);
 
 
 

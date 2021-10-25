@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Schedule Election</title>
+    <title>View Candidates</title>
     <!-- Required meta tags -->
     <%- include('../partials/head.ejs') %>
   </head>
@@ -76,7 +76,7 @@
           %>
 
           <div class="alert alert-warning" role="alert" style="text-align: center;">
-            No any election Candidates was found!
+            No record found!
           </div>
 
 
@@ -222,13 +222,15 @@
           
        %>
 
+<% if (position.candidate.length>0){ %>
+
+
        <div class="row ">
         <div class="col-12 grid-margin style="width:100%;">
           <div class="card">
             <div class="card-body">
               <h4 class="card-title"><%= position.position_name %></h4>
-              <% if (position.candidate.length>0)
-              {  %>
+              
               <div class="table-responsive">
                 <table class="table">
                   <thead>
@@ -283,38 +285,38 @@
                 </div>
               </div>
             </div>
-          <%  } 
-          
-          else {
-
-          %>
-          
-          <br /><br />
-          <div class="alert alert-warning" role="alert" style="text-align: center;">
-            No any Candidates were found for this position!
-          </div>
-          
-
-        <%   } %> 
+           
 
           </div>
-       
+          <%  }else{%>
+
+            <div class="row mx-auto">
+        <div class="col-12 grid-margin mx-auto >
+          <div class="card">
+            <div class="card-body">
+
+              
+                <div class="alert alert-warning" role="alert" style="text-align: center;">
+            No candidate registered for <strong> <%= position.position_name %> </strong>
+          </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+
+
+
+
+            <% }%>
+         
         <% }) %>
        
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
+
        
         </div>
 
@@ -332,25 +334,7 @@
       <!-- page-body-wrapper ends -->
     </div> 
     
-    <!-- container-scroller -->
-    <!-- plugins:js -->
-    <script src="/vendors/js/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-    <script src="/vendors/select2/select2.min.js"></script>
-    <script src="/vendors/typeahead.js/typeahead.bundle.min.js"></script>
-    <!-- End plugin js for this page -->
-    <!-- inject:js -->
-    <script src="/js/off-canvas.js"></script>
-    <script src="/js/hoverable-collapse.js"></script>
-    <script src="/js/misc.js"></script>
-    <script src="/js/settings.js"></script>
-    <script src="/js/todolist.js"></script>
-    <!-- endinject -->
-    <!-- Custom js for this page -->
-    <script src="/js/file-upload.js"></script>
-    <script src="/js/typeahead.js"></script>
-    <script src="/js/select2.js"></script>
-    <!-- End custom js for this page -->
+    // <!-- adding scripts -->
+    <%- include('../partials/script.ejs') %>
   </body>
 </html>

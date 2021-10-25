@@ -265,7 +265,7 @@ const delete_election = async function (req, res) {
 
 }
 
-const save = function (req, res) {
+const save = async function (req, res) {
   //generate a unique otp pin
   var otp_pin = Math.floor(100000 + Math.random() * 900000);
 
@@ -282,9 +282,9 @@ const save = function (req, res) {
 
   var params = req.body
   // finding all the elections with the same name
-  const existing_election = db.election_data.findOne({
+  const existing_election = await db.election_data.findAll({
     where: {
-      title: req.body.title
+      title: req.body.title,
     }
   });
 

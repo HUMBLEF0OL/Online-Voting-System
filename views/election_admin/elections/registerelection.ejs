@@ -7,11 +7,6 @@
   </head>
   <body>
 
-
-
-
-
-
 <div class="container-scroller">
       <!-- partial:partials/_sidebar.html -->
 
@@ -25,9 +20,7 @@
         
         <div class="main-panel">
           <div class="content-wrapper">
-        
-
-
+      
 
             <div class="content-wrapper">
               <div class="row">
@@ -51,7 +44,6 @@
                 </div>
               </div>
     
-
               
 
               <% if(alertsm.length>0){ %>
@@ -61,14 +53,6 @@
                 <br /><br />
               <%}%>
       
-        
-
-           
-              
-
-
-
-
 
             <br /><br />             
             <div class="row">
@@ -105,49 +89,21 @@
                         </div>
                       </div>
 
-
-
-                      
-
                       <button type="submit" class="btn btn-primary mr-2">Confirm</button>
                       <button class="btn btn-dark">Cancel</button>
                     </form>
                   </div>
                 </div>
               </div>
-
-          <!-- content-wrapper ends -->
-          <!-- partial:../../partials/_footer.html -->
-
-          <!-- partial -->
         </div>
         <!-- main-panel ends -->
       </div>
       <footer class="footer">
         <%- include('../partials/footer.ejs') %>
       </footer>
-      <!-- page-body-wrapper ends -->
     </div> 
     
-    <!-- container-scroller -->
-    <!-- plugins:js -->
-    <script src="/vendors/js/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-    <script src="/vendors/select2/select2.min.js"></script>
-    <script src="/vendors/typeahead.js/typeahead.bundle.min.js"></script>
-    <!-- End plugin js for this page -->
-    <!-- inject:js -->
-    <script src="/js/off-canvas.js"></script>
-    <script src="/js/hoverable-collapse.js"></script>
-    <script src="/js/misc.js"></script>
-    <script src="/js/settings.js"></script>
-    <script src="/js/todolist.js"></script>
-    <!-- endinject -->
-    <!-- Custom js for this page -->
-    <script src="/js/file-upload.js"></script>
-    <script src="/js/typeahead.js"></script>
-    <script src="/js/select2.js"></script>
-    <!-- End custom js for this page -->
+     <!-- adding scripts -->
+    <%- include('../partials/script.ejs') %>
   </body>
 </html>
