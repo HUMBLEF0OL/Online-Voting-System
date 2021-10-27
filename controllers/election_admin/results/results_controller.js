@@ -80,7 +80,7 @@ const election_dashboard_view = async  function(req,res)
                                           },
                                           order:  [['position_name', 'ASC']]
                                         });
-                                        res.render('../views/election_admin/results/viewR',{election_stats,elections,results});           
+                                        res.render('../views/election_admin/results/export',{election_stats,elections,results});           
                                        
                           }
                           else
@@ -99,7 +99,7 @@ const election_dashboard_view = async  function(req,res)
                                           order:  [['position_name', 'ASC']]
                                         });
                                        // res.send(results);
-                                       res.render('../views/election_admin/results/viewR',{election_stats,elections,results}); 
+                                       res.render('../views/election_admin/results/export',{election_stats,elections,results}); 
 
                           }
 

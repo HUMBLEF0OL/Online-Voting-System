@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Export Result</title>
+    <!-- Required meta tags -->
+    <%- include('../partials/head.ejs') %>
+  </head>
+  <body>
+
+
+
+
+
+
+<div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+
+
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <%- include('../partials/navigation.ejs') %>
+        </nav>
+
+
+        <!-- Main Content -->
+
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+              <div class="col-12 grid-margin stretch-card">
+                <div class="card corona-gradient-card">
+                  <div class="card-body py-0 px-0 px-sm-3">
+                    <div class="row align-items-center">
+                      <div class="col-4 col-sm-3 col-xl-2">
+                        <img src="/images/dashboard/Group126@2x.png" class="gradient-corona-img img-fluid" alt="">
+                      </div>
+                      <div class="col-5 col-sm-7 col-xl-8 p-0">
+                        <h4 class="mb-1 mb-sm-0"><%= elections.title %></h4>
+                        <p class="mb-0 font-weight-normal d-none d-sm-block"><%= elections.election_display_id %></p>
+                      </div>
+                      <div class="col-3 col-sm-2 col-xl-2 pl-0 text-center">
+                        <span>
+                          <% if (elections.status=="not_started")
+                          {
+                          %>
+                            <a href="#" target="_blank" class="btn btn-outline-light btn-rounded get-started-btn"> Not Started</a>  
+                          <%
+                          }
+                          else{
+                          %>
+                            <a href="#" target="_blank" class="btn btn-outline-light btn-rounded get-started-btn"><%= elections.status  %> </a>
+                         <% } %>
+                          
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Election heading -->
+            <div class="row">
+              <div class="col-3 grid-margin stretch-card">
+                <div class="card ">
+                  <div class="card-body py-0 px-0 px-sm-3">
+                    <div class="row align-items-center">
+                      <div class="col-4 col-sm-3 col-xl-2">
+                        <i class=" mdi mdi-account-multiple align-items-center"></i>
+                      </div>
+                      <div class="col-5 col-sm-7 col-xl-8 p-0">
+                        <h4 class="mb-1 mb-sm-0 text-center">Election Stats</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0"><%= election_stats.positions %></h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="icon icon-box-success ">
+                          <span class=" mdi mdi-arrow-top-right  icon-item"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Number Of Positions</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0"><%= election_stats.candidates %></h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="icon icon-box-success">
+                          <span class=" mdi mdi-arrow-top-right icon-item"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Number of Candidates</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0"><%= election_stats.voters_eligible %></h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="icon icon-box-success">
+                          <span class="mdi mdi-arrow-top-right icon-item"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Eligible Voters</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0"><%= election_stats.voters_registered %></h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="icon icon-box-danger ">
+                          <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Voters Registered</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <!--  -->
+    <!-- Election heading -->
+    <div class="row">
+      <div class="col-3 grid-margin stretch-card">
+        <div class="card ">
+          <div class="card-body py-0 px-0 px-sm-3">
+            <div class="row align-items-center">
+              <div class="col-4 col-sm-3 col-xl-2">
+                <i class=" mdi mdi-account-multiple align-items-center"></i>
+              </div>
+              <div class="col-5 col-sm-7 col-xl-8 p-0">
+                <h4 class="mb-1 mb-sm-0 text-center">Election Results </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+ 
+    <% 
+    
+    if (elections.status=="completed")
+    {
+          results.forEach(function(position){
+    %>
+     
+<div class="row">
+
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title"><%= position.position_name %></h4>
+        <p class="card-description"></code>
+        </p>
+        <div class="table-responsive">
+          <table class="table table-bordered" id="tblCustomers">
+            <thead>
+              <tr>
+                <th> Position </th>
+                <th> Full name </th>
+                <th> Candidate Votes </th>
+                <th> Total Votes </th>
+                <th> Percentage </th>
+                <th> Result </th>
+              </tr>
+            </thead>
+            <tbody>
+              <%
+              var count = 1;
+           
+              position.results.forEach(function(result){
+              var percentage;
+              var divisionv;
+              var class_value
+                function roundToTwo(num) {    
+                  return +(Math.round(num + "e+2")  + "e-2");
+                       }
+              divisionv=(result.candidate_votes/result.total_votes)*100; 
+             
+              percentage = roundToTwo(divisionv);
+
+              if(result.result_outcome=="won")
+              {
+                class_value="bg-success";
+              }
+              else if(result.result_outcome=="lost")
+              {
+                class_value="bg-danger";
+              } 
+              else if(result.result_outcome=="tie")
+              {
+                class_value="bg-warning";
+              }   
+
+              %>
+                <tr>
+                <td> <%= count %></td>
+                <td> <%= result.candidate.user_info.firstname +" "+result.candidate.user_info.lastname %> </td>
+                <td> <%= result.candidate_votes %></td>
+                <td> <%= result.total_votes %></td>
+                <td>
+                  <%= percentage %> %
+                  <div class="progress">
+                    <div class="progress-bar <%= class_value %>" role="progressbar" style="width:<%= percentage %>%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </td>
+                <td> <%= result.result_outcome %> </td>
+              </tr>
+            <% 
+
+             count= count + 1;
+
+          }); 
+          
+          %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div> 
+<%
+
+}); 
+
+} 
+else
+ {
+
+results.forEach(function(position){
+  %>
+   
+<div class="row">
+
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title"><%= position.position_name %></h4>
+      <p class="card-description"></code>
+      </p>
+      <div class="table-responsive">
+        <table class="table table-bordered" >
+          <thead>
+            <tr>
+              <th> Full name </th>
+              <th> Email </th>
+              <th> Date Registered </th>
+              <th> Eligibility </th>
+            </tr>
+          </thead>
+          <tbody>
+            <%
+                function dateconversion(date_value)
+                {
+              
+                var formattedDate = date_value.toLocaleDateString('en-GB', {
+                day: 'numeric', month: 'short', year: 'numeric'
+                  }).replace(/ /g, '-');
+
+                  return formattedDate;
+              }
+              position.candidate.forEach(function(candidate_info){ 
+            %>
+              <tr>
+      
+              <td> <%= candidate_info.user_info.firstname +" "+candidate_info.user_info.lastname %> </td>
+              <td> <%= candidate_info.user_info.email %></td>
+              <td> <%= dateconversion(candidate_info.createdAt) %></td>
+              <td>
+                <%
+                 if (candidate_info.status=="eligible")
+                 {
+                %>  
+                 <div class="badge badge-outline-success">eligible</div>
+               <%
+                 }
+                 else {
+               %>
+               <div class="badge badge-outline-danger">Disquafied</div>
+              <%
+                 }
+              %> 
+               </td>
+            </tr>
+          <% 
+
+        }); 
+        
+        %>
+          </tbody>
+        </table>
+
+        
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+</div> 
+<% }); }%>
+
+
+
+
+          
+      
+      <footer class="footer">
+        <%- include('../partials/footer.ejs') %>
+      </footer>
+      <!-- page-body-wrapper ends -->
+    </div> 
+    
+  <!--adding scripts-->
+  <%- include('../partials/script.ejs') %>
+
+  <br />
+    <input type="button" id="btnExport" value="Export" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript">
+        $("body").on("click", "#btnExport", function () {
+            html2canvas($('#tblCustomers')[0], {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                          
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("cutomer-details.pdf");
+                }
+            });
+        });
+    </script>
+  
+  </body>
+</html>
