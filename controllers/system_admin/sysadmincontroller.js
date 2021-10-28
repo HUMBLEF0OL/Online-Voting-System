@@ -205,8 +205,26 @@ let success = [];
 //user manager
 const manage = async function(req,res)
 {
-    const users = await db.user_data.findAll();
-    res.render('../views/system_admin/usermanager',{users,alertsm : ""});
+
+
+    //pagination logic
+    const pageAsNumber = Number.parseInt(req.params.pagen);
+    let page = 0;
+    let size = 6; //number of records per page
+    if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+      page = pageAsNumber;
+    }
+  
+    const users = await db.user_data.findAll({
+      limit: size,
+      offset: page * size
+    });
+    const totalusers = await db.user_data.count();
+    const totalPages =  Math.ceil(totalusers/ Number.parseInt(size));
+    //end of pagination logi
+
+
+    res.render('../views/system_admin/usermanager',{users,page,totalPages,alertsm:""});
 }
 
 

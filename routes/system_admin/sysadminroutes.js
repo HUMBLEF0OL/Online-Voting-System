@@ -18,7 +18,7 @@ router.get('/rolerouter',sysadmincontroller.isAuthenticated_role,sysadmincontrol
 
 router.post('/save',sysadmincontroller.isAuthenticated,sysadmincontroller.save);   
 
-router.get('/umanage',sysadmincontroller.isAuthenticated,sysadmincontroller.manage);   
+router.get('/umanage/:pagen',sysadmincontroller.isAuthenticated,sysadmincontroller.manage);   
 
 router.get('/udelete/:uid',sysadmincontroller.isAuthenticated,sysadmincontroller.delete_user); 
 
