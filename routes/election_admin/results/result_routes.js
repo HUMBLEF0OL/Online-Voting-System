@@ -11,7 +11,7 @@ router.get('/manageR',result_controller.manage_get);
 router.get('/publish/:eid',result_controller.publish_election);
 
 router.get('/viewR/:eid',result_controller.election_dashboard_view); 
-router.get('/export/:eid',result_controller.election_dashboard_view); 
+router.get('/export/:eid',result_controller.exportResult); 
 // router.get('/view/:eid',votercontroller.view);   
 
 // router.get('/manage2V/:eid',votercontroller.manage);
