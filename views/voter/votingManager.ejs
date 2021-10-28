@@ -1,0 +1,174 @@
+<html lang = "en">
+    <head>
+        <title> <%= electionData.title %> || VOTE </title>
+        <%- include('./partials/head.ejs') %>
+    </head>
+    <body>
+        <div class = "container-scroller">
+            <nav class = "sidebar sidebar-offcanvas" id = "sidebar">
+             <%- include('./partials/navigation.ejs') %>
+            </nav>
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <!-- Main Heading of main Content -->
+                    <div class="row">                        
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card corona-gradient-card">
+                                <div class="card-body py-0 px-0 px-sm-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4 col-sm-3 col-xl-2">
+                                            <img src="/images/dashboard/Group126@2x.png" class="gradient-corona-img img-fluid" alt="">
+                                        </div>
+                                        <div class="col-5 col-sm-7 col-xl-8 p-0">
+                                            <h4 class="mb-1 mb-sm-0"> <%= electionData.title %> || VOTE </h4>
+                                            <p class="mb-0 font-weight-normal d-none d-sm-block"></p>
+                                        </div>
+                                        <div class="col-3 col-sm-2 col-xl-2 pl-0 text-center">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    
+                    <form action = "/voter/evote/voteData" method= "POST">
+
+                    <%
+                        function dateconversion(date_value)
+                        {                         
+                            var formattedDate = date_value.toLocaleDateString('en-GB', {
+                            day: 'numeric', month: 'short', year: 'numeric'
+                            }).replace(/ /g, '-');
+
+                            return formattedDate;
+                        }                    
+                                       
+                        <!-- Loop for displaying Candidates -->
+                        for(let i = 0; i < dataToDisplay.length;)
+                        {
+                    %>
+
+                            <div class="row ">
+                                <div class="col-12 grid-margin" style="width:100%;">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h3 class="card-title"> <%= dataToDisplay[i].position_name %> </h3>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th> Candidate ID </th>
+                                                            <th> First Name </th>
+                                                            <th> Last Name </th>
+                                                            <th> Phone number </th>
+                                                            <th> email </th>                                                               
+                                                            <th> Vote </th>
+                                                        </tr>
+                                                    </thead>                                              
+                                                    <tbody>
+                                                        <input type = "hidden" name = "position_id" value = "<%= dataToDisplay[i].position_id %>">
+
+                                            <!-- Loop for displaying candidates for a paricular position -->
+                                            <%
+                                                let j = i;
+                                                let currPosition = dataToDisplay[i].position_id;
+                                                while(j < dataToDisplay.length && dataToDisplay[j].position_id === currPosition)
+                                                {
+                                                    if(dataToDisplay[j].status === 'disqualified')
+                                                    {
+                                                        j += 1;
+                                                        continue;
+                                                    }
+                                            %>
+                                            
+                                                        <tr>
+                                                            <td> <%= dataToDisplay[j].candidate_id %> </td>
+                                                            <td>
+                                                                <img src="/images/faces/user.png" alt="image" />
+                                                                <span class="pl-2"> <%= dataToDisplay[j].firstname %> </span>
+                                                            </td>
+                                                            <td> <%= dataToDisplay[j].lastname %> </td>
+                                                            <td> <%= dataToDisplay[j].phonenumber %> </td>
+                                                            <td> <%= dataToDisplay[j].email %> </td>
+                                                            <td> 
+                                                                <!-- <input type = "hidden" name = "position_id" value = "<%= dataToDisplay[j].position_id %>">  -->
+                                                                <input type="radio" name="<%= dataToDisplay[j].position_name %>" value="<%= dataToDisplay[j].candidate_id %>">
+                                                            </td>
+                                                        </tr>                                                                                 
+
+                                            <!-- Loop for displaying candidates for a particular position ending-->
+                                            <%
+                                                    j += 1;
+                                                }
+                                            %>
+
+                                                        <tr>
+                                                            <td> NOTA </td>
+                                                            <td>
+                                                                <img src="/images/faces/user.png" alt="image" />
+                                                                <span class="pl-2"> NOTA </span>
+                                                            </td>
+                                                            <td> NOTA </td>
+                                                            <td> NOTA </td>
+                                                            <td> NOTA </td>
+                                                            <td> 
+                                                                <input type="radio" name="<%= dataToDisplay[i].position_name %>" value="-1" checked>
+                                                            </td>
+                                                        </tr>          
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                               
+                                
+                    <!-- Loop for displaying candidates ending -->
+                    <%
+                            i = j;
+                        }
+                    %>
+                    
+                    <!-- Submit button -->
+                    <div>
+                        <input type = "hidden" name = "election_id" value = "<%= electionData.election_id %>">
+                        <button type = "submit"> SUBMIT </button>
+                    </div>
+                   
+                    </form>        
+
+                    <footer class="footer">
+                        <%- include('./partials/footer.ejs') %>
+                    </footer>
+                <!-- Content - Wrapper finishing -->
+                </div>
+            <!-- Main - Panel finishing-->
+            </div>
+        <!-- Scroller - Container Finishing -->
+        </div>
+
+        <!-- container-scroller -->
+        <!-- plugins:js -->
+        <script src="/vendors/js/vendor.bundle.base.js"></script>
+        <!-- endinject -->
+        <!-- Plugin js for this page -->
+        <script src="/vendors/select2/select2.min.js"></script>
+        <script src="/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+        <!-- End plugin js for this page -->
+        <!-- inject:js -->
+        <script src="/js/off-canvas.js"></script>
+        <script src="/js/hoverable-collapse.js"></script>
+        <script src="/js/misc.js"></script>
+        <script src="/js/settings.js"></script>
+        <script src="/js/todolist.js"></script>
+        <!-- endinject -->
+        <!-- Custom js for this page -->
+        <script src="/js/file-upload.js"></script>
+        <script src="/js/typeahead.js"></script>
+        <script src="/js/select2.js"></script>
+        <!-- End custom js for this page -->
+
+    </body>
+</html>
