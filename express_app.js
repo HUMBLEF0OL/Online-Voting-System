@@ -20,9 +20,10 @@ const viewspath = path.join(__dirname,"/views")
 const electionroutes = require('./routes/election_admin/elections/electionroutes');
 const positionroutes = require('./routes/election_admin/positions/positionsroutes');
 const candidateroutes = require('./routes/election_admin/candidates/candidatesroutes');
-const voter_rollroutes = require('./routes/election_admin/voter/voter_roll_routes');
+const voter_rollroutes = require('./routes/election_admin/voter_roll/voter_roll_routes');
 const result_routes = require('./routes/election_admin/results/result_routes');
 const systemadminroutes = require('./routes/system_admin/sysadminroutes');
+const voterroutes = require('./routes/voter/voterroutes');
 //initialising express app
 const app=express();
 //middleware for url encoding
@@ -95,9 +96,10 @@ app.get('/',function(req,res){
 app.use('/election',electionroutes); 
 app.use('/position',positionroutes); 
 app.use('/candidate',candidateroutes); 
-app.use('/voter',voter_rollroutes);
+app.use('/voter_roll',voter_rollroutes);
 app.use('/result',result_routes);
 app.use('/user',systemadminroutes);
+app.use('/voter',voterroutes);
  
 //midlle ware static
 app.set("views", viewspath)

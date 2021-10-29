@@ -36,12 +36,13 @@
                           <% if (elections.status=="not_started")
                           {
                           %>
-                            <a href="#" target="_blank" class="btn btn-outline-light btn-rounded get-started-btn"> Not Started</a>  
+                          <button class="btn btn-outline-light btn-rounded get-started-btn ">Not Started</button>
                           <%
                           }
                           else{
                           %>
-                            <a href="#" target="_blank" class="btn btn-outline-light btn-rounded get-started-btn"><%= elections.status  %> </a>
+                          <button class="btn btn-outline-light btn-rounded get-started-btn "><%= elections.status  %></button>
+                            
                          <% } %>
                           
                         </span>
@@ -235,8 +236,9 @@
                 <td> <%= result.candidate_votes %></td>
                 <td> <%= result.total_votes %></td>
                 <td>
+                  <%= percentage %> %
                   <div class="progress">
-                    <div class="progress-bar <%= class_value %>" role="progressbar" style="width: <%= percentage %> " aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar <%= class_value %>" role="progressbar" style="width:<%= percentage %>%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                 </td>
                 <td> <%= result.result_outcome %> </td>

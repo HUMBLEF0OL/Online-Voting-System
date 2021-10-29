@@ -74,17 +74,22 @@
                                                         <a href="/voter/eview/<%= electionData[i].election_id %>"> <button type="button" class="btn btn-info btn-fw"> View Result </button></a>
                                                     </div> -->
                                                     <div class="col-3 col-sm-2 col-xl-2 pl-0 text-center">
-                                                        <a style= "display:flex; flex-direction:column" href="/voter/eview/<%= electionData[i].election_id %>"> <button type="button" class="btn btn-info btn-fw"> View Extended Information </button></a>
+
+
+                                                        <div class="btn-group">
+                                                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Action
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item " href="/voter/eview/<%= electionData[i].election_id %>">Extened Details
+                                                            </a>
+                                                            <a class="dropdown-item"
+                                                                href="/voter/eresult/<%= electionData[i].election_id %>">Results</a>
+                                                            
+                                                        </div>
+                                                        </div>
                                                         
-                                                        <% 
-                                                            if(electionData[i].status === 'completed')
-                                                            {
-                                                        %>
-                                                            <br>
-                                                            <a style= "display:flex; flex-direction:column" href="/voter/eresult/<%= electionData[i].election_id %>"> <button type="button" class="btn btn-info btn-fw"> View Result </button></a>
-                                                        <%
-                                                            }
-                                                        %>
                                                     </div>
                                                 </div>
                                             </div>
@@ -104,19 +109,19 @@
                                                                 if(electionData[i].status === 'not_started')
                                                                 {
                                                             %>
-                                                                <h3 class="mb-0"> NOT STARTED </h3>
+                                                                <h3 class="mb-0 text-warning"> NOT STARTED </h3>
                                                             <%
                                                                 }
                                                                 else if(electionData[i].status === 'running')
                                                                 {
                                                             %>
-                                                                <h3 class="mb-0"> ONGOING </h3>
+                                                                <h3 class="mb-0 text-success" > ONGOING </h3>
                                                             <%
                                                                 }
                                                                 else if(electionData[i].status === 'completed')
                                                                 {
                                                             %>
-                                                                <h3 class="mb-0"> FINISHED </h3>
+                                                                <h3 class="mb-0 text-primary"> FINISHED </h3>
                                                             <%
                                                                 }
                                                             %>

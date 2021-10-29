@@ -10,6 +10,29 @@ const { doesNotMatch } = require('assert');
 const { nthArg } = require('lodash');
 const { url } = require('inspector');
 
+//Function to Authenticate User -> user must be voter otherwise it can't access the voter module
+function isAuthenticated(req, res, next) {
+    if (req.isAuthenticated())
+    {
+        req.user.then(function(result) {
+          // console.log(result.role) // "Some User token"
+          if(result.role!='voter')
+            {
+                res.redirect('/');
+            }  
+            else
+            {
+                return next();
+            }
+        });            
+    }
+    else
+    {
+        res.redirect('/');
+    }
+
+}
+
 //Function to get the dashboard view for voter module
 const voter_dashboard_get = async  function(req,res)
 {
@@ -67,28 +90,7 @@ const voter_dashboard_get = async  function(req,res)
   res.render('../views/voter/dashboard',{election_stats,elections,hasVoted,alert});
 }
 
-//Function to Authenticate User -> user must be voter otherwise it can't access the voter module
-function isAuthenticated(req, res, next) {
-    if (req.isAuthenticated())
-    {
-        req.user.then(function(result) {
-          // console.log(result.role) // "Some User token"
-          if(result.role!='voter')
-            {
-                res.redirect('/');
-            }  
-            else
-            {
-                return next();
-            }
-        });            
-    }
-    else
-    {
-        res.redirect('/');
-    }
-
-} 
+ 
 
 //Function to get the data of candidates for Election with id (elecid)
 const getCandData = async function(elecid) {

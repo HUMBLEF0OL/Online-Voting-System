@@ -2,6 +2,11 @@ const express = require("express");
 const db = require('../../../models');
 const fast2sms = require('fast-two-sms')
 const _ = require('lodash');
+const cron = require('node-cron')
+// sechduling a job
+
+
+
 
 const election_register_get = function (req, res) {
   var alertsm = "";
@@ -13,45 +18,9 @@ const manage = async function (req, res) {
   res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: "" });
 }
 
-
-//start election
-const start_election = async function (req, res) {
-  var eid = req.params.eid;
-
-  try {
-    await db.election_data.update(
-      {
-        status: 'running'
-      },
-      {
-        where: { election_id: eid }
-      });
-
-    const elections = await db.election_data.findAll();
-    res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: "Election Has been Started" });
-
-  } catch (err) { console.log(err) }
-
-
-}
-
-
-
-//stop election
-const stop_election = async function (req, res) {
-  try {
-    var eid = req.params.eid;
-    await db.election_data.update(
-      {
-        status: 'completed'
-      },
-      {
-        where: { election_id: eid }
-      });
-
-    const elections = await db.election_data.findAll();
-
-
+// calculating results
+async function calculate_result(eid)
+{
 
     // populating the result table
     // var eid=req.params.eid;
@@ -212,6 +181,48 @@ const stop_election = async function (req, res) {
 
       }
     }
+}
+
+//start election
+const start_election = async function (req, res) {
+  var eid = req.params.eid;
+
+  try {
+    await db.election_data.update(
+      {
+        status: 'running'
+      },
+      {
+        where: { election_id: eid }
+      });
+
+    const elections = await db.election_data.findAll();
+    res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: "Election Has been Started" });
+
+  } catch (err) { console.log(err) }
+
+
+}
+
+
+
+//stop election
+const stop_election = async function (req, res) {
+  try {
+    var eid = req.params.eid;
+    await db.election_data.update(
+      {
+        status: 'completed'
+      },
+      {
+        where: { election_id: eid }
+      });
+
+    const elections = await db.election_data.findAll();
+    calculate_result(eid);
+
+
+    
     res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: "Election Has been Completed" });
 
   } catch (err) { console.log(err) }
@@ -337,7 +348,88 @@ const save = async function (req, res) {
 
 
 }
+// scheduling date and time of election
+function scheduling(election_one)
+{
+  // scheduling the election
+  var time = election_one.start_time;
+  var start_date = election_one.start_date; 
+  var month = start_date.getMonth()+1;
+  var day = start_date.getDate();
+  var year = start_date.getFullYear();
+  
+  
+  var pseudo_date = year.toString()+"-"+month.toString()+"-"+day.toString()+"T";
+  start_date = new Date(pseudo_date+time);
+  
+  
+  var hour= start_date.getHours();
+  var min= start_date.getMinutes();
+  
+  var cron_date = '0 '+min.toString()+' '+hour.toString()+' '+day.toString()+' '+month.toString()+' *';
+  
+  cron.schedule(cron_date,async function(){
+    try {
+      
+      var current_year = new Date().getFullYear();
+      if(current_year == year)
+      {
+        await db.election_data.update(
+          {
+            status: 'running'
+          },
+          {
+            where: {election_id:election_one.election_id}
+          });
+          console.log("Election with election ID "+election_one.election_id+" has started")
+      } 
+    } catch (err) { console.log(err) }
+      
+  });
 
+
+
+  var time = election_one.stop_time;
+  var stop_date = election_one.stop_date; 
+  var month = stop_date.getMonth()+1;
+  var day = stop_date.getDate();
+  var year = stop_date.getFullYear();
+  
+  
+  var pseudo_date = year.toString()+"-"+month.toString()+"-"+day.toString()+"T";
+  stop_date = new Date(pseudo_date+time);
+  
+  
+  var hour= stop_date.getHours();
+  var min= stop_date.getMinutes();
+  
+  var cron_date = '0 '+min.toString()+' '+hour.toString()+' '+day.toString()+' '+month.toString()+' *';
+  
+console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n pseudo_date "+pseudo_date+" "+"stop_date "+stop_date+" "+"hour "+hour+" "+"min "+min+"\n"+"cron_date "+cron_date+"\n\n\n\n");
+
+
+  cron.schedule(cron_date,async function(){
+    try {
+      
+      var current_year = new Date().getFullYear();
+      if(current_year == year)
+      {
+        await db.election_data.update(
+          {
+            status: 'completed'
+          },
+          {
+            where: {election_id:election_one.election_id}
+          });
+          calculate_result(election_one.election_id);
+          console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nElection with election ID "+election_one.election_id+" has stopped\n\n")
+      } 
+    } catch (err) { console.log(err) }
+      
+  });
+
+
+}
 const verify = async function (req, res) {
 
   const otpf = req.body.otp;
@@ -376,6 +468,8 @@ const verify = async function (req, res) {
       success = "Election  : " + election_one.title + " with ID: " + election_one.election_display_id + " is Successfully Registered";
 
       alerts.success = success;
+
+        scheduling(election_one);
 
       const elections = await db.election_data.findAll();
       res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: success });

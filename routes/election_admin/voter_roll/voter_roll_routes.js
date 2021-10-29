@@ -3,7 +3,7 @@ const express = require('express')
 const router = require('express').Router()
 
 const {isAuthenticated} = require('../../../controllers/election_admin/elections/electionController');
-const votercontroller = require('../../../controllers/election_admin/voter/voter_roll_controller');
+const votercontroller = require('../../../controllers/election_admin/voter_roll/voter_roll_controller');
 
 router.get('/manageV',isAuthenticated,votercontroller.manage_get);   
 
