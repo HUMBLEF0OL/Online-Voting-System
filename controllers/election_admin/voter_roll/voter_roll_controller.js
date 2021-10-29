@@ -13,33 +13,10 @@ const manage_get =  async function(req,res)
     order:  [['election_id', 'DESC']]
 
   });
-  res.render('./election_admin/voter/manageV',{elections,alertsm : ""});
+  res.render('./election_admin/voter_roll/manageV',{elections,alertsm : ""});
   
 }
-// for viewing the voters of a particular election
-// const view =  async function(req,res)
-// {
-  
-//    var eid=req.params.eid;
-//   try {
 
-    // const voter_rolls = await db.voter_roll.findAll({
-    //   where: {
-    //     election_id: eid
-    //   },
-    //   order:  [['roll_id', 'ASC']]
-  
-    // });
- 
-//       res.render('./election_admin/voter_roll/view',{voter_rolls,eid,alerte:"",alertsm : ""});
-
-//   } catch (error) 
-//   {
-  
-//      console.log(error);
-//   }
-  
-// }
 const view =  async function(req,res)
 {
   
@@ -73,7 +50,7 @@ const view =  async function(req,res)
   
     });
  
-      res.render('./election_admin/voter/view',{voter_rolls,eid,election,stats,alerte:"",alertsm : ""});
+      res.render('./election_admin/voter_roll/view',{voter_rolls,eid,election,stats,alerte:"",alertsm : ""});
 
   } catch (error) 
   {
@@ -108,7 +85,7 @@ const manage = async function(req,res)
  
     
   //res.send(positions);
-   res.render('./election_admin/voter/manage2V',{voter_rolls,eid,alertsm : ""});
+   res.render('./election_admin/voter_roll/manage2V',{voter_rolls,eid,alertsm : ""});
   
 }
 
@@ -134,7 +111,7 @@ const disqualify_voter_get =  async function(req,res)
 
     
  
-      res.render('./election_admin/voter/reason',{voter_rolls,rid,alerte:"",alertsm : ""});
+      res.render('./election_admin/voter_roll/reason',{voter_rolls,rid,alerte:"",alertsm : ""});
         //res.send(positions);
 
   } catch (error) 
@@ -192,7 +169,7 @@ const disqualify_voter= async function(req,res)
         order:  [['election_id', 'DESC']]
     
       });
-      res.render('./election_admin/voter/manageV',{elections,alertsm : "Changes Saved"});
+      res.render('./election_admin/voter_roll/manageV',{elections,alertsm : "Changes Saved"});
    
   
   

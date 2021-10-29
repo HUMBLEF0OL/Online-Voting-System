@@ -1,0 +1,301 @@
+<html lang = "en">
+    <head>
+        <title> <%= electionData.title %> </title>
+        <%- include('./partials/head.ejs') %>
+    </head>
+    <body>
+        <div class = "container-scroller">
+            <nav class = "sidebar sidebar-offcanvas" id = "sidebar">
+             <%- include('./partials/navigation.ejs') %>
+            </nav>
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <!-- Main Heading of main Content -->
+                    <div class="row">                        
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card corona-gradient-card">
+                                <div class="card-body py-0 px-0 px-sm-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4 col-sm-3 col-xl-2">
+                                            <img src="/images/dashboard/Group126@2x.png" class="gradient-corona-img img-fluid" alt="">
+                                        </div>
+                                        <div class="col-5 col-sm-7 col-xl-8 p-0">
+                                            <h4 class="mb-1 mb-sm-0"> <%= electionData.title %> Election Overview</h4>
+                                            <p class="mb-0 font-weight-normal d-none d-sm-block"></p>
+                                        </div>
+                                        <div class="col-3 col-sm-2 col-xl-2 pl-0 text-center">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+
+                    <%
+                        function dateconversion(date_value)
+                        {                         
+                            var formattedDate = date_value.toLocaleDateString('en-GB', {
+                            day: 'numeric', month: 'short', year: 'numeric'
+                            }).replace(/ /g, '-');
+
+                            return formattedDate;
+                        }
+                    %>
+
+                    <!-- Row with Statistics -->
+                    <div class="row">
+
+                        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                                <%
+                                                    if(electionData.status === 'not_started')
+                                                    {
+                                                %>
+                                                    <h3 class="mb-0 text-warning"> NOT STARTED </h3>
+                                                <%
+                                                    }
+                                                    else if(electionData.status === 'running')
+                                                    {
+                                                %>
+                                                    <h3 class="mb-0 text-success"> ONGOING </h3>
+                                                <%
+                                                    }
+                                                    else if(electionData.status === 'completed')
+                                                    {
+                                                %>
+                                                    <h3 class="mb-0 text-danger"> FINISHED </h3>
+                                                <%
+                                                    }
+                                                %>
+                                                <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-3">
+                                            <div class="icon icon-box-success ">
+                                                <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal"> Election Status </h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                                <h5 class="mb-0"><%= dateconversion(electionData.start_date) %></h5>
+                                                <p class="text-success ml-2 mb-0 font-weight-medium"> <%= electionData.start_time %> </p>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-3">
+                                        <div class="icon icon-box-success">
+                                            <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                        </div>
+                                        </div> -->
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal"> Election Start Date and Time </h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                                <h5 class="mb-0"><%= dateconversion(electionData.stop_date) %></h5>
+                                                <p class="text-danger ml-2 mb-0 font-weight-medium"> <%= electionData.stop_time %> </p>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-3">
+                                        <div class="icon icon-box-danger">
+                                            <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                                        </div>
+                                        </div> -->
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal"> Election Stop Date and Time </h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-sm-6 grid-margin stretch-card" style = "width:100%;">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+
+                                                <%
+                                                    if(electionData.published === 'no')
+                                                    {
+                                                %>
+                                                    <h3 class="mb-0"> NO </h3>
+                                                <%
+                                                    }
+                                                    else 
+                                                    {
+                                                %>
+                                                    <h3 class="mb-0"> YES </h3>
+                                                <%
+                                                    }
+                                                %>
+
+                                                <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-3">
+                                        <div class="icon icon-box-success ">
+                                            <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                        </div>
+                                        </div> -->
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal"> Result Published </h6>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- Statistics Row Finishing-->
+                    </div>
+
+                    <%                               
+                        if(dataToDisplay.length < 1)
+                        {                            
+                    %>
+    
+                    <div class="alert alert-warning" role="alert" style="text-align: center;">
+                        No any election Candidates was found!
+                    </div>  
+    
+                    <%  
+                        }
+                        else
+                        {                   
+                            <!-- Loop for displaying Candidates -->
+                            for(let i = 0; i < dataToDisplay.length;)
+                            {
+                    %>
+                                <div class="row ">
+                                    <div class="col-12 grid-margin" style="width:100%;">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h3 class="card-title"> <%= dataToDisplay[i].position_name %> </h3>
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th> First Name </th>
+                                                                <th> Last Name </th>
+                                                                <th> Phone number </th>
+                                                                <th> email </th>
+                                                                <th> Candidate Status </th>
+                                                            </tr>
+                                                        </thead>                                              
+                                                        <tbody>
+
+                                                <!-- Loop for displaying candidates for a paricular position -->
+                                                <%
+                                                    let j = i;
+                                                    let currPosition = dataToDisplay[i].position_id;
+                                                    while(j < dataToDisplay.length && dataToDisplay[j].position_id === currPosition)
+                                                    {
+                                                %>
+                                                
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="/images/faces/user.png" alt="image" />
+                                                                    <span class="pl-2"> <%= dataToDisplay[j].firstname %> </span>
+                                                                </td>
+                                                                <td> <%= dataToDisplay[j].lastname %> </td>
+                                                                <td> <%= dataToDisplay[j].phonenumber %> </td>
+                                                                <td> <%= dataToDisplay[j].email %> </td>
+                                                                <td>
+
+                                                                    <%
+                                                                        if(dataToDisplay[j].status === 'eligible')
+                                                                        {
+                                                                    %>
+
+                                                                    <div class="badge badge-outline-success"> Eligible </div>
+                                                                            
+                                                                    <%
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                    %>
+                                                                    
+                                                                    <div class="badge badge-outline-danger"> Disquafied </div>
+
+                                                                    <%
+                                                                        }
+                                                                    %>
+
+                                                                </td>
+                                                            </tr>                                                                                 
+
+                                                <!-- Loop for displaying candidates for a particular position ending-->
+                                                <%
+                                                        j += 1;
+                                                    }
+                                                %>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                               
+                                
+                        <!-- Loop for displaying candidates ending -->
+                        <%
+                                i = j;
+                            }
+                        %>                  
+
+                    <!-- else ending ( else of condition dataToDisplay.length > 0) -->
+                    <%        
+                        }
+                    %>
+
+                    <footer class="footer">
+                        <%- include('./partials/footer.ejs') %>
+                    </footer>
+                <!-- Content - Wrapper finishing -->
+                </div>
+            <!-- Main - Panel finishing-->
+            </div>
+        <!-- Scroller - Container Finishing -->
+        </div>
+
+        <!-- container-scroller -->
+        <!-- plugins:js -->
+        <script src="/vendors/js/vendor.bundle.base.js"></script>
+        <!-- endinject -->
+        <!-- Plugin js for this page -->
+        <script src="/vendors/select2/select2.min.js"></script>
+        <script src="/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+        <!-- End plugin js for this page -->
+        <!-- inject:js -->
+        <script src="/js/off-canvas.js"></script>
+        <script src="/js/hoverable-collapse.js"></script>
+        <script src="/js/misc.js"></script>
+        <script src="/js/settings.js"></script>
+        <script src="/js/todolist.js"></script>
+        <!-- endinject -->
+        <!-- Custom js for this page -->
+        <script src="/js/file-upload.js"></script>
+        <script src="/js/typeahead.js"></script>
+        <script src="/js/select2.js"></script>
+        <!-- End custom js for this page -->
+
+    </body>
+</html>

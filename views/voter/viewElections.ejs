@@ -1,0 +1,265 @@
+<html lang = "en">
+    <head>
+        <title> Elections Overview </title>
+        <%- include ('./partials/head.ejs') %>
+    </head>
+    <body>
+        <div class = "container-scroller">
+            <nav class = "sidebar sidebar-offcanvas" id = "sidebar">
+                <%- include('./partials/navigation.ejs') %>
+            </nav>
+
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <!-- Main Heading of main Content -->
+                    <div class="row">                        
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card corona-gradient-card">
+                                <div class="card-body py-0 px-0 px-sm-3">
+                                    <div class="row align-items-center">
+                                        <div class="col-4 col-sm-3 col-xl-2">
+                                            <img src="/images/dashboard/Group126@2x.png" class="gradient-corona-img img-fluid" alt="">
+                                        </div>
+                                        <div class="col-5 col-sm-7 col-xl-8 p-0">
+                                            <h2 class="mb-1 mb-sm-0"> Elections Overview </h2>
+                                            <p class="mb-0 font-weight-normal d-none d-sm-block"> List of Elections </p>
+                                        </div>
+                                        <div class="col-3 col-sm-2 col-xl-2 pl-0 text-center">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <%
+                        function dateconversion(date_value)
+                        {                         
+                            var formattedDate = date_value.toLocaleDateString('en-GB', {
+                            day: 'numeric', month: 'short', year: 'numeric'
+                            }).replace(/ /g, '-');
+
+                            return formattedDate;
+                        }
+                        if(electionData.length < 1)
+                        {
+                    %>
+
+                    <div class="alert alert-warning" role="alert" style="text-align: center;">
+                        No Election is Registered
+                    </div> 
+
+                    <%
+                        }
+                        else
+                        {
+                            for(let i = 0; i < electionData.length; i++)
+                            {
+                    %>
+
+                                <div class="row">                        
+                                    <div class="col-12 grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body py-0 px-0 px-sm-3">
+                                                <div class="row align-items-center">
+                                                    <div class="col-4 col-sm-3 col-xl-2">
+                                                        <img src="/images/dashboard/Group126@2x.png" class="gradient-corona-img img-fluid" alt="">
+                                                    </div>
+                                                    <div class="col-5 col-sm-7 col-xl-8 p-0">
+                                                        <h3 class="mb-1 mb-sm-0"> <%= electionData[i].title %> Overview </h3>
+                                                        <p class="mb-0 font-weight-normal d-none d-sm-block"></p>
+                                                    </div>
+                                                    <!-- <div class="col-3 col-sm-2 col-xl-2 pl-0 text-center">
+                                                        <a href="/voter/eview/<%= electionData[i].election_id %>"> <button type="button" class="btn btn-info btn-fw"> View Result </button></a>
+                                                    </div> -->
+                                                    <div class="col-3 col-sm-2 col-xl-2 pl-0 text-center">
+
+
+                                                        <div class="btn-group">
+                                                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Action
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item " href="/voter/eview/<%= electionData[i].election_id %>">Extened Details
+                                                            </a>
+                                                            <a class="dropdown-item"
+                                                                href="/voter/eresult/<%= electionData[i].election_id %>">Results</a>
+                                                            
+                                                        </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Starting of Election List -->
+                                <div class="row">
+                                    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <div class="d-flex align-items-center align-self-start">
+                                                            <%
+                                                                if(electionData[i].status === 'not_started')
+                                                                {
+                                                            %>
+                                                                <h3 class="mb-0 text-warning"> NOT STARTED </h3>
+                                                            <%
+                                                                }
+                                                                else if(electionData[i].status === 'running')
+                                                                {
+                                                            %>
+                                                                <h3 class="mb-0 text-success" > ONGOING </h3>
+                                                            <%
+                                                                }
+                                                                else if(electionData[i].status === 'completed')
+                                                                {
+                                                            %>
+                                                                <h3 class="mb-0 text-primary"> FINISHED </h3>
+                                                            <%
+                                                                }
+                                                            %>
+                                                            <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="col-3">
+                                                        <div class="icon icon-box-success ">
+                                                            <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                                        </div>
+                                                    </div> -->
+                                                </div>
+                                                <h6 class="text-muted font-weight-normal"> Election Status </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <div class="d-flex align-items-center align-self-start">
+                                                            <h5 class="mb-0"><%= dateconversion(electionData[i].start_date) %></h5>
+                                                            <p class="text-success ml-2 mb-0 font-weight-medium"> <%= electionData[i].start_time %> </p>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="col-3">
+                                                    <div class="icon icon-box-success">
+                                                        <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                                    </div>
+                                                    </div> -->
+                                                </div>
+                                                <h6 class="text-muted font-weight-normal"> Election Start Date and Time </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <div class="d-flex align-items-center align-self-start">
+                                                            <h5 class="mb-0"><%= dateconversion(electionData[i].stop_date) %></h5>
+                                                            <p class="text-danger ml-2 mb-0 font-weight-medium"> <%= electionData[i].stop_time %> </p>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="col-3">
+                                                    <div class="icon icon-box-danger">
+                                                        <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                                                    </div>
+                                                    </div> -->
+                                                </div>
+                                                <h6 class="text-muted font-weight-normal"> Election Stop Date and Time </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-3 col-sm-6 grid-margin stretch-card" style = "width:100%;">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <div class="d-flex align-items-center align-self-start">
+
+                                                            <%
+                                                                if(electionData[i].published === 'no')
+                                                                {
+                                                            %>
+                                                                <h3 class="mb-0"> NO </h3>
+                                                            <%
+                                                                }
+                                                                else 
+                                                                {
+                                                            %>
+                                                                <h3 class="mb-0"> YES </h3>
+                                                            <%
+                                                                }
+                                                            %>
+
+                                                            <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="col-3">
+                                                    <div class="icon icon-box-success ">
+                                                        <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                                    </div>
+                                                    </div> -->
+                                                </div>
+                                                <h6 class="text-muted font-weight-normal"> Result Published </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!-- Statistics Row Finishing-->
+                                </div>
+                            </br> </br> 
+                        <!-- Ending of for loop displaying Elections-->        
+                        <%
+                            }
+                        %>
+                    <!-- Ending of Election list 'else' block -->
+                    <%
+                        }
+                    %>
+                    
+                    
+                    <footer class="footer">
+                        <%- include('./partials/footer.ejs') %>
+                    </footer>
+
+                <!-- End of Content - Wrapper DIV-->
+                </div>
+            <!-- End of main - panel DIV -->
+            </div>
+        <!-- End of main (container - scroller) DIV-->
+        </div>
+
+        <!-- container-scroller -->
+        <!-- plugins:js -->
+        <script src="/vendors/js/vendor.bundle.base.js"></script>
+        <!-- endinject -->
+        <!-- Plugin js for this page -->
+        <script src="/vendors/select2/select2.min.js"></script>
+        <script src="/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+        <!-- End plugin js for this page -->
+        <!-- inject:js -->
+        <script src="/js/off-canvas.js"></script>
+        <script src="/js/hoverable-collapse.js"></script>
+        <script src="/js/misc.js"></script>
+        <script src="/js/settings.js"></script>
+        <script src="/js/todolist.js"></script>
+        <!-- endinject -->
+        <!-- Custom js for this page -->
+        <script src="/js/file-upload.js"></script>
+        <script src="/js/typeahead.js"></script>
+        <script src="/js/select2.js"></script>
+        <!-- End custom js for this page -->
+
+    </body>
+</html>
