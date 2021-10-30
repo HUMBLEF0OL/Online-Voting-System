@@ -181,6 +181,17 @@ async function calculate_result(eid)
 
       }
     }
+    const puppeteer = require('puppeteer');
+
+
+    const browser = await puppeteer.launch();
+          const page = await browser.newPage();
+          await page.goto('http://localhost:3000/election/eview_raw/'+eid+'.pdf', {
+            waitUntil: 'networkidle2',
+          });
+          await page.pdf({ path: 'public/downloads/'+eid+'.pdf', format: 'a4' });
+        
+          await browser.close();
 }
 
 //start election
@@ -599,6 +610,62 @@ const election_dashboard_view = async function (req, res) {
 }
 
 
+const election_view_raw = async  function(req,res)
+{
+  var eid=req.params.eid;
+  var election_stats={};
 
+  
+  try
+  {
+  const elections = await db.election_data.findOne({where:{election_id:eid}});
+  election_stats.positions = await db.position_data.count({where:{election_id:eid}});
+  election_stats.candidates = await db.candidate_data.count({where:{election_id:eid}});
+  election_stats.voters_eligible = await db.user_data.count();
+  election_stats.voters_registered = await db.roll_data.count({where:{election_id:eid}});
 
-module.exports = { election_dashboard_view, election_dashboard, verify, save, election_register_get, manage, start_election, delete_election, publish_election, stop_election, isAuthenticated }
+                          //Results set Controls    
+                          if (elections.status=='completed')
+                          {
+
+                                        const results = await db.position_data.findAll({
+                                          where: {
+                                            election_id: eid
+                                          },
+                                          include :
+                                          {
+                                            model: db.results_data, as: 'results',
+                                            include : { 
+                                              model: db.candidate_data, as: 'candidate', include:{ model: db.user_data , as:'user_info' }
+                                            }, order:  [['candidate_votes', 'DESC']]
+                                          },
+                                          order:  [['position_name', 'ASC']]
+                                        });
+                                        res.render('../views/election_admin/elections/dashboard_view_raw',{election_stats,elections,results});           
+                                       
+                          }
+                          else
+                          {
+                                        const results = await db.position_data.findAll({
+                                          where: {
+                                            election_id: eid
+                                          },
+                                          include :
+                                          {
+                                            model: db.candidate_data, as: 'candidate',
+                                            include : { 
+                                              model: db.user_data, as: 'user_info'
+                                            }
+                                          },
+                                          order:  [['position_name', 'ASC']]
+                                        });
+                                     
+                                       res.render('../views/election_admin/elections/dashboard_view_raw',{election_stats,elections,results}); 
+
+                          }
+
+                        }catch(err){console.log(err);}
+
+}
+
+module.exports = { election_dashboard_view,election_view_raw, election_dashboard, verify, save, election_register_get, manage, start_election, delete_election, publish_election, stop_election, isAuthenticated }

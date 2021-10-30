@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Election Results</title>
+      <style>
+     
+table {
+  border-collapse: collapse;
+}
+ th {
+  background: #ccc;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background: #efefef;
+}
+
+tr:hover {
+  background: #d1d1d1;
+}
+    </style>
+  </head>
+  <body>
+
+
+<%
+
+function dateconversion(date_value)
+{
+
+ var formattedDate = date_value.toLocaleDateString('en-GB', {
+ day: 'numeric', month: 'short', year: 'numeric'
+  }).replace(/ /g, '-');
+
+  return formattedDate;
+}
+
+%>
+
+
+<div>
+  <img src="/images/logo1.png"  alt="logo">
+</div>  
+  <div class="row">
+
+  <h3 style="text-align: center;">Delhi University Election Report</h3>
+  </div>
+
+  <div style="align-self: center;">  
+  <table class="my_table">
+    <tr>
+      <th>Election Title</th>
+      <th>Election Start Date</th>
+      <th>Election Stop Date</th>
+      <th>Number Of Positions</th>
+      <th>Number Of Candidates</th>
+      <th>Eligible Voters</th>
+      <th>Voters Registered</th>
+    </tr>
+    <tr>
+      <td><%= elections.title %></td>
+      <td> <%= dateconversion(elections.start_date) +" "+elections.start_time %> </td>
+      <td> <%= dateconversion(elections.stop_date) +" "+elections.stop_time %> </td>
+      <td><%= election_stats.positions %></td>
+      <td><%= election_stats.candidates %></td>
+      <td><%= election_stats.voters_eligible %></td>
+      <td><%=  election_stats.voters_registered %></td>
+    </tr>
+  </table> 
+</div>              
+              
+            <!--  -->
+    <!-- Election heading -->
+    <div class="row">
+                <h3 style="text-align: center;">Election Results  </h3>
+    </div>
+  
+ 
+    <% 
+    
+    if (elections.status=="completed")
+    {
+          results.forEach(function(position){
+    %>
+
+<div>
+        <h4 ><%= position.position_name %></h4>
+</div>
+<div >
+          <table>
+            <thead>
+              <tr>
+                <th> Position </th>
+                <th> Full name </th>
+                <th> Candidate Votes </th>
+                <th> Total Votes </th>
+                <th> Percentage </th>
+                <th> Result </th>
+              </tr>
+            </thead>
+            <tbody>
+              <%
+              var count = 1;
+           
+              position.results.forEach(function(result){
+              var percentage;
+              var divisionv;
+              var class_value;
+              var pv;  
+
+                function roundToTwo(num) {    
+                  return +(Math.round(num + "e+2")  + "e-2");
+                       }
+              divisionv=(result.candidate_votes/result.total_votes)*100; 
+             
+              percentage = roundToTwo(divisionv);
+
+              if(result.result_outcome=="won")
+              {
+                class_value="bg-success";
+              }
+              else if(result.result_outcome=="lost")
+              {
+                class_value="bg-danger";
+              } 
+              else
+              {
+                class_value="bg-warning";
+              }   
+
+
+             pv="style=\"width:"+percentage+"%\""; 
+       
+
+              %>
+
+
+              
+                <tr>
+                <td> <%= count %></td>
+                <td> <%= result.candidate.user_info.firstname +" "+result.candidate.user_info.lastname %> </td>
+                <td> <%= result.candidate_votes %></td>
+                <td> <%= result.total_votes %></td>
+                <td>
+                  <%= percentage %> %
+                </td>
+                <td> <%= result.result_outcome %> </td>
+              </tr>
+            <% 
+
+             count= count + 1;
+
+          }); 
+          
+          %>
+            </tbody>
+          </table>
+</div>
+
+<%
+
+}); 
+
+} 
+%>   
+      <footer class="footer">
+        <br /><br /><br /><br />
+        <img src="/images/signature.png"  alt="signature">
+        <p>________________________________________________________________________</p>
+        <p>Approved & signed signed by <b>Election Commissioner</b></p>
+        <p><%= dateconversion(elections.stop_date) +" "+elections.stop_time %></p>
+      </footer>
+      <!-- page-body-wrapper ends -->
+    </div> 
+
+  </body>
+</html>

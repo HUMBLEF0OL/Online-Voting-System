@@ -184,13 +184,14 @@
                       <div class="dropdown-menu">
                         <a class="dropdown-item " href="/result/viewR/<%= election.election_id %>">View
                           </a>
-                          <% if (election.published=="yes" ) { %>
-                          <a class="dropdown-item"
-                            href="/result/export/<%= election.election_id%>">Export</a>
-                          <% }else{ %>
+                          
                             <a class="dropdown-item "
+                            href="/downloads/<%= election.election_id%>.pdf" >Download</a>
+                          <% if (election.published=="no" ) { %>
+                          <a class="dropdown-item "
                             href="/result/publish/<%= election.election_id %>" >Publish</a>
-                            <% } %>
+                          <% } %>
+                            
                       </div>
                     </div>
                      </td>

@@ -82,10 +82,12 @@
                                                             Action
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item " href="/voter/eview/<%= electionData[i].election_id %>">Extened Details
+                                                            <a class="dropdown-item " href="/voter/eview/<%= electionData[i].election_id %>">Election Details
                                                             </a>
                                                             <a class="dropdown-item"
-                                                                href="/voter/eresult/<%= electionData[i].election_id %>">Results</a>
+                                                                href="/voter/eresult/<%= electionData[i].election_id %>">View Results</a>
+                                                            <a class="dropdown-item"
+                                                            href="/downloads/<%= electionData[i].election_id %>.pdf">Download</a>
                                                             
                                                         </div>
                                                         </div>
