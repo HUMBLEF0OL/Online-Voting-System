@@ -176,10 +176,10 @@
                                       </button>
                                       <div class="dropdown-menu">
                                         <!-- updation required-->
-                                        <a class="dropdown-item " href="/voter_roll/view/<%= election.election_id %>">View
+                                        <a class="dropdown-item " href="/voter_roll/view/<%= election.election_id %>/0">View
                                           Voters</a>
                                         <a class="dropdown-item "
-                                          href="/voter_roll/manage2V/<%= election.election_id %>">Manage Voters</a>
+                                          href="/voter_roll/manage2V/<%= election.election_id %>/0">Manage Voters</a>
                                       </div>
                                     </div>
                             </td>
@@ -191,13 +191,35 @@
                   </div>
                 </div>
               </div>
+              
              
             </div>
          
           </div>
 
           <% }%>
-   
+          <nav aria-label="..." style="justify-content: center;">
+                <ul class="pagination" style="justify-content: center;">
+                 <% if(page==0){ %>
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                <%} else {  %>
+                <li class="page-item"><a class="page-link" href="/voter_roll/manageV/<%= page-1 %>">Previous</a></li>
+                <% } %>
+
+                  <% for(let i = 0; i < totalPages; i++) { if(i==page){ %>
+                  <li class="page-item active" aria-current="page">
+                    <span class="page-link"><%= i+1 %></span>
+                  </li>
+                  <% } else { %>
+                  <li class="page-item"><a class="page-link" href="/voter_roll/manageV/<%= i %>"><%= i+1 %></a></li>
+                  <% }} if(page==(totalPages-1)) { %>
+                  <li class="page-item disabled"><span class="page-link">Next</span></li>
+                  <% } else { %>  
+                 <li class="page-item"><a class="page-link" href="/voter_roll/manageV/<%= page+1 %>">Next</a></li>  
+                 <% } %>
+
+                </ul>
+              </nav>
 
 
         <!-- main-panel ends -->

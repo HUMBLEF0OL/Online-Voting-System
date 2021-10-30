@@ -91,10 +91,15 @@ else {
   params.user_id=users.user_id;
 
   console.log(params);
+  console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n "+req.body.position_id);
+  const existing = await db.candidate_data.findAll({
+      where: {
+        election_id: eid,
+        position_id:req.body.position_id,
+        user_id:params.user_id
+      }
+      
   
-  //saving election data to database
-  await db.candidate_data.create(params).catch(function(err){
-    console.log(err)
     });
 
     const positions = await db.position_data.findAll({
@@ -104,10 +109,20 @@ else {
       order:  [['position_name', 'ASC']]
   
     });
-    
- 
-      res.render('./election_admin/candidates/reg2',{positions,eid,alerte:"",alertsm : "Candidate Registered Successfully"});
-        //res.send(positions);
+    if(existing.length>0)
+    {
+      res.render('./election_admin/candidates/reg2',{positions,eid,alerte:"",alertsm : "Candidate Already Registered"});
+
+    }
+    else{
+      //saving election data to database
+      await db.candidate_data.create(params).catch(function(err){
+        console.log(err)
+        });
+        res.render('./election_admin/candidates/reg2',{positions,eid,alerte:"",alertsm : "Candidate Registered Successfully"});
+
+    }
+  
 
 
  

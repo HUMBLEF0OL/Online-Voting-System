@@ -174,8 +174,29 @@
         </div>
 
         <% }%>
+      </div>
+        <nav aria-label="..." style="justify-content: center;">
+                <ul class="pagination" style="justify-content: center;">
+                 <% if(page==0){ %>
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                <%} else {  %>
+                <li class="page-item"><a class="page-link" href="/voter_roll/manage2V/<%=eid%>/<%= page-1 %>">Previous</a></li>
+                <% } %>
 
+                  <% for(let i = 0; i < totalPages; i++) { if(i==page){ %>
+                  <li class="page-item active" aria-current="page">
+                    <span class="page-link"><%= i+1 %></span>
+                  </li>
+                  <% } else { %>
+                  <li class="page-item"><a class="page-link" href="/voter_roll/manage2V/<%=eid%>/<%= i %>"><%= i+1 %></a></li>
+                  <% }} if(page==(totalPages-1)) { %>
+                  <li class="page-item disabled"><span class="page-link">Next</span></li>
+                  <% } else { %>  
+                 <li class="page-item"><a class="page-link" href="/voter_roll/manage2V/<%=eid%>/<%= page+1 %>">Next</a></li>  
+                 <% } %>
 
+                </ul>
+              </nav>
 
           <!-- main-panel ends -->
 
@@ -183,8 +204,8 @@
             <%- include('../partials/footer.ejs') %>
           </footer>
           <!-- page-body-wrapper ends -->
-      </div>
-
+      
+      
       <%- include('../partials/script.ejs') %>
 </body>
 
