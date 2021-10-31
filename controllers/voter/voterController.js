@@ -36,59 +36,63 @@ function isAuthenticated(req, res, next) {
 //Function to get the dashboard view for voter module
 const voter_dashboard_get = async  function(req,res)
 {
+    var election_stats={};
+    const elections = await db.election_data.findAll({
+        limit: 5,
+        order: [[
+            'start_date','DESC'
+        ]]
+    });
 
-  var election_stats={};
-  const elections = await db.election_data.findAll();
+    let hasVoted = [];
+    const userID = await req.user.then(result => result.user_id);
 
-  let hasVoted = [];
-  const userID = await req.user.then(result => result.user_id);
+    //   console.log(elections[0].election_id + " " + userID);
+    for(let i = 0;i < elections.length; i++)
+    {
+        const check = await db.votes_data.findOne({
+            where : {
+                election_id : elections[i].election_id,
+                user_id : userID
+            }
+        });
+        hasVoted[i] = new Object();
+        hasVoted[i]['election_id'] = elections[i].election_id;
 
-//   console.log(elections[0].election_id + " " + userID);
-  for(let i = 0;i < elections.length; i++)
-  {
-     const check = await db.votes_data.findOne({
-         where : {
-             election_id : elections[i].election_id,
-             user_id : userID
-         }
-     });
-     hasVoted[i] = new Object();
-     hasVoted[i]['election_id'] = elections[i].election_id;
-
-     if(check !== null)
-     {
-         hasVoted[i]['hasVoted'] = true;
-     }
-     else
-     {
-        hasVoted[i]['hasVoted'] = false;
-     }
-  }
-
-  election_stats.election_count = await db.election_data.count();
-  election_stats.election_scheduled = await db.election_data.count({
-    where : {
-      status:'not_started'
+        if(check !== null)
+        {
+            hasVoted[i]['hasVoted'] = true;
+        }
+        else
+        {
+            hasVoted[i]['hasVoted'] = false;
+        }
     }
-  });
- 
-  election_stats.election_running = await db.election_data.count({
-    where : {
-      status:'running'
-    }
-  });
 
-  election_stats.election_completed = await db.election_data.count({
-    where : {
-      status:'completed'
-    }
-  });
+    election_stats.election_count = await db.election_data.count();
+    election_stats.election_scheduled = await db.election_data.count({
+        where : {
+        status:'not_started'
+        }
+    });
+    
+    election_stats.election_running = await db.election_data.count({
+        where : {
+        status:'running'
+        }
+    });
 
-  let alert = null;
-  if(!_.isEmpty(req.query.alert))
-    alert = req.query.alert;
-  res.render('../views/voter/dashboard',{election_stats,elections,hasVoted,alert});
-}
+    election_stats.election_completed = await db.election_data.count({
+        where : {
+        status:'completed'
+        }
+    });
+
+    let alert = null;
+    if(!_.isEmpty(req.query.alert))
+        alert = req.query.alert;
+    res.render('../views/voter/dashboard',{election_stats,elections,hasVoted,alert});
+};
 
  
 
@@ -200,9 +204,25 @@ const electionList = async (req,res) => {
     
     try
     {
+
+        const pageAsNumber = Number.parseInt(req.params.pn);
+        let page = 0;
+        let size = 20; //number of records per page
+        if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+            page = pageAsNumber;
+        }
+
         //Retrieving the current Not started Elections
         const currElecList = await db.election_data.findAll({
+            limit: size,
+            offset: page * size,
             where: { status: 'not_started'}
+        });
+
+        const totalElection = await db.election_data.count({
+            where: {
+                status: 'not_started'
+            }
         });
 
         //Generating array for whether user has registered or not
@@ -231,7 +251,10 @@ const electionList = async (req,res) => {
         let alertmsg = null;
         if(!_.isEmpty(req.query.alert))
             alertmsg = req.query.alert;
-        res.render('./voter/viewCurrentElections',{currElecList,alertmsg,nAlreadyRegistered});
+        
+        const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
+
+        res.render('./voter/viewCurrentElections',{currElecList,alertmsg,nAlreadyRegistered,totalPages,page});
     }
     catch(err)
     {
@@ -275,17 +298,31 @@ const registerForElection = async (req,res) => {
     alertmsg = encodeURIComponent(alertmsg);   
 
     //redirect to Register page to avoid knowing register address
-    res.redirect('/voter/viewCurrElections/?alert=' + alertmsg);
+    res.redirect('/voter/viewCurrElections/0/?alert=' + alertmsg);
     
 };
 
 const electionInfo = async(req,res) => {
    try{
 
+    const pageAsNumber = Number.parseInt(req.params.pn);
+    let page = 0;
+    let size = 5; //number of records per page
+    if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+        page = pageAsNumber;
+    }
+
     //Getting the data of elections from database
     const electionData = await db.election_data.findAll({
+<<<<<<< HEAD
         
+=======
+        limit: size,
+        offset: page * size
+>>>>>>> 06ebacee6794118126ce47406e180039ba08bf53
     });
+
+    const totalElection = await db.election_data.count({});
 
     //Sorting the elections on based on UpdatedAt
     electionData.sort((a,b) => {
@@ -294,11 +331,13 @@ const electionInfo = async(req,res) => {
         if(a.updatedAt < b.updatedAt)
             return 1;
         return 0;
-    })
+    });
+
+    const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
 
     // console.log(electionData);
 
-    res.render('./voter/viewElections',{electionData});
+    res.render('./voter/viewElections',{electionData,totalPages,page});
    }
    catch(err){
        console.log(err);
