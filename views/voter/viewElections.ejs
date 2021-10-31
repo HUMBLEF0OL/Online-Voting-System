@@ -47,7 +47,7 @@
                     %>
 
                     <div class="alert alert-warning" role="alert" style="text-align: center;">
-                        No Election is Registered
+                        No Election is Registered!
                     </div> 
 
                     <%
@@ -84,11 +84,15 @@
                                                         <div class="dropdown-menu">
                                                             <a class="dropdown-item " href="/voter/eview/<%= electionData[i].election_id %>">Election Details
                                                             </a>
+                                                            <%if(electionData[i].status == "completed"){%>
                                                             <a class="dropdown-item"
                                                                 href="/voter/eresult/<%= electionData[i].election_id %>">View Results</a>
-                                                            <a class="dropdown-item"
+                                                            <% }if(electionData[i].published == "yes"){ %>
+                                                                
+                                                                <a class="dropdown-item"
                                                             href="/downloads/<%= electionData[i].election_id %>.pdf">Download</a>
                                                             
+                                                            <%}%>
                                                         </div>
                                                         </div>
                                                         
@@ -114,19 +118,25 @@
                                                                 <h3 class="mb-0 text-warning"> NOT STARTED </h3>
                                                             <%
                                                                 }
-                                                                else if(electionData[i].status === 'running')
+                                                                 if(electionData[i].status === 'running')
                                                                 {
                                                             %>
                                                                 <h3 class="mb-0 text-success" > ONGOING </h3>
                                                             <%
                                                                 }
-                                                                else if(electionData[i].status === 'completed')
+                                                                 if(electionData[i].status === 'completed')
                                                                 {
                                                             %>
-                                                                <h3 class="mb-0 text-primary"> FINISHED </h3>
+                                                                    <% if(electionData[i].published == "yes") {%>
+                                                                        <h3 class="mb-0 text-info"> FINISHED </h3>
+                                                                    <%}else{%>
+                                                                        <h3 class="mb-0 text-primary"> COMPLETED </h3>
+                                                                    <% }%>
+                                                                
                                                             <%
                                                                 }
                                                             %>
+                                                            
                                                             <p class="text-success ml-2 mb-0 font-weight-medium"></p>
                                                         </div>
                                                     </div>

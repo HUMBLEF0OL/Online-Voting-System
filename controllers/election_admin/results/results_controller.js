@@ -5,6 +5,20 @@ const _ = require('lodash');
 
 const manage_get =  async function(req,res)
 {
+  const pageAsNumber = Number.parseInt(req.params.pagen);
+  let page = 0;
+  let size = 6; //number of records per page
+  if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+    page = pageAsNumber;
+  }
+
+  const totalElection = await db.election_data.count({
+    where: {
+      status: ["completed"],
+    },
+  });
+  const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
+
 
   const elections = await db.election_data.findAll({
     where: {
@@ -13,7 +27,7 @@ const manage_get =  async function(req,res)
     order:  [[['published']],['start_date', 'DESC']]
 
   });
-  res.render('./election_admin/results/manageR',{elections,alertsm : ""});
+  res.render('./election_admin/results/manageR',{elections,totalPages,page,alertsm : ""});
   
 }
 

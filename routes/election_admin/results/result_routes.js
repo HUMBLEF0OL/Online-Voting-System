@@ -4,7 +4,7 @@ const router = require('express').Router()
 
 const result_controller = require('../../../controllers/election_admin/results/results_controller');
 
-router.get('/manageR',result_controller.manage_get);   
+router.get('/manageR/:pagen',result_controller.manage_get);   
 
 
 //publish election

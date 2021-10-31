@@ -284,6 +284,7 @@ const electionInfo = async(req,res) => {
 
     //Getting the data of elections from database
     const electionData = await db.election_data.findAll({
+        
     });
 
     //Sorting the elections on based on UpdatedAt
