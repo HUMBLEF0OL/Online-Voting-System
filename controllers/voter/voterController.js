@@ -298,7 +298,7 @@ const registerForElection = async (req,res) => {
     alertmsg = encodeURIComponent(alertmsg);   
 
     //redirect to Register page to avoid knowing register address
-    res.redirect('/voter/viewCurrElections/?alert=' + alertmsg);
+    res.redirect('/voter/viewCurrElections/0/?alert=' + alertmsg);
     
 };
 
