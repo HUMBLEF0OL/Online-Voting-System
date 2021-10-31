@@ -12,9 +12,9 @@ router.get('/evote/:eid',voterController.isAuthenticated,voterController.voteMan
 
 router.get('/eresult/:eid',voterController.isAuthenticated,voterController.viewResult);
 
-router.get('/viewCurrElections',voterController.isAuthenticated,voterController.electionList);
+router.get('/viewCurrElections/:pn',voterController.isAuthenticated,voterController.electionList);
 
-router.get('/einformation',voterController.isAuthenticated,voterController.electionInfo);
+router.get('/einformation/:pn',voterController.isAuthenticated,voterController.electionInfo);
 
 router.get('/cregister/:uid', voterController.isAuthenticated,voterController.registerForElection);
 
