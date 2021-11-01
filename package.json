@@ -19,6 +19,7 @@
     "cpu-percentage": "^1.0.3",
     "date-format": "^3.0.0",
     "ejs": "^3.1.6",
+    "email-validator": "^2.0.4",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.1",
     "express-session": "^1.17.2",
@@ -35,6 +36,7 @@
     "path": "^0.12.7",
     "puppeteer": "^10.4.0",
     "sequelize": "^6.6.5",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "validate-phone-number-node-js": "0.0.1"
   }
 }

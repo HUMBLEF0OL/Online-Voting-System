@@ -8,6 +8,8 @@ const passport = require('passport');
 const session = require('express-session');
 var fs = require('fs');
 const os = require('os'); 
+var validator = require("email-validator");
+const validatePhoneNumber = require('validate-phone-number-node-js');
 const checkDiskSpace = require('check-disk-space').default;
 const { constant } = require("lodash");
 
@@ -148,7 +150,7 @@ let success = [];
      
 
    try{
-              const users_count = await db.user_data.findOne(
+              const users_count = await db.user_data.count(
                 {
                     where:{
                       email:req.body.email
@@ -156,13 +158,43 @@ let success = [];
                 }
               );
 
-             
-            
-              if(!_.isEmpty(users_count))
+              const users_id_count = await db.user_data.count(
+                {
+                    where:{
+                      identification:req.body.identification
+                    }
+                }
+              );
+              const users_phone_count = await db.user_data.count(
+                {
+                    where:{
+                      phonenumber:req.body.phonenumber
+                    }
+                }
+              );
+
+              if(! validator.validate(req.body.email))
               {
-              errors.push({ msg: 'Email or User already exists' });
+                errors.push({ msg: 'Invalid Email' });
               }
-              else
+              if(! validatePhoneNumber.validate(phonenumber))
+              {
+                errors.push({ msg: 'Invalid Phone Number' });
+              }
+            
+              if(users_count>0)
+              {
+              errors.push({ msg: 'User With Particular email Already Exist' });
+              }
+              if(users_id_count>0)
+              {
+              errors.push({ msg: 'User With Particular ID Already Exist' });
+              }
+              if(users_phone_count>0)
+              {
+              errors.push({ msg: 'Phone number Already Registered by another user' });
+              }
+              if (errors.length==0)
               {
 
                           //generate a user passowrd
@@ -206,7 +238,12 @@ let success = [];
 const manage = async function(req,res)
 {
 
-
+  var alertsm = req.flash('alerts1') ;
+  if (alertsm.length<1)
+  {
+     alertsm = "";
+  }
+  
     //pagination logic
     const pageAsNumber = Number.parseInt(req.params.pagen);
     let page = 0;
@@ -221,10 +258,10 @@ const manage = async function(req,res)
     });
     const totalusers = await db.user_data.count();
     const totalPages =  Math.ceil(totalusers/ Number.parseInt(size));
-    //end of pagination logi
+    //end of pagination logic
 
 
-    res.render('../views/system_admin/usermanager',{users,page,totalPages,alertsm:""});
+    res.render('../views/system_admin/usermanager',{users,page,totalPages,alertsm, errors: req.flash('alerte1')});
 }
 
 
@@ -232,30 +269,136 @@ const manage = async function(req,res)
 const delete_user = async function(req,res)
 {
     var uid=req.params.uid;
-    
+    var errors=[];
     try
     {
-      await db.user_data.destroy(
+
+      const users_exist = await db.candidate_data.count(
+        {
+            where:{
+              user_id:uid
+            }
+         }
+       );
+       const users_admin = await db.user_data.count(
+        {
+            where:{
+              role:'admin',status:'current'
+            }
+         }
+       );
+       const user_role = await db.user_data.count(
+        {
+            where:{
+              user_id:uid,role:'admin'
+            }
+          });
+
+       if(users_admin==1 && user_role==1)
+       {
+        req.flash('alerte1', 'You can not Delete the current user, you need atleast one Active System Administrator'); 
+        errors.push({ msg: 'You can not Delete the current user, you need atleast one System Administrator'}); 
+       }
+
+       if(users_exist>1)
+       {
+        req.flash('alerte1', 'Delete Failed!, User is attached to one or more elections as a candidate'); 
+        errors.push({ msg: 'Delete Failed!, User is attached to one or more elections as a candidate'}); 
+       }
+
+      if(errors.length<1)
       {
-        where: { user_id: uid }
-      });
-
-
-    const users = await db.user_data.findAll();
-    res.render('../views/system_admin/usermanager',{users,alertsm : "User Deleted Successfully"});
-     
-
-
+              await db.user_data.destroy(
+              {
+                where: { user_id: uid }
+              });
+              req.flash('alerts1', 'User Deleted Successfully');
+              res.redirect('/user/umanage/0');
+      }
+      else
+      {
+        res.redirect('/user/umanage/0');
+      }
     }catch(err){console.log(err)}
      
    
 }
 
+//disable user
+const user_disable = async function(req,res)
+{
+    var uid=req.params.uid;
+    var errors=[];
+    try
+    {
+
+    
+       const users_admin = await db.user_data.count(
+        {
+            where:{
+              role:'admin',status:'current'
+            }
+         }
+       );
+       const user_role = await db.user_data.count(
+        {
+            where:{
+              user_id:uid,role:'admin'
+            }
+          });
+
+       if(users_admin==1 && user_role==1)
+       {
+        req.flash('alerte1', 'You can not Disable the selected user, you need atleast one System Administrator'); 
+        errors.push({ msg: 'You can not Disable the selected user, you need atleast one System Administrator'}); 
+       }
+     
+      if(errors.length<1)
+      {
+              await db.user_data.update( {
+                status: 'not_current' 
+              },
+              {
+                where: { user_id: uid }
+              });
+              req.flash('alerts1', 'User Disabled Successfully');
+              res.redirect('/user/umanage/0');
+      }
+      else
+      {
+        res.redirect('/user/umanage/0');
+      }
+    }catch(err){console.log(err)}
+     
+   
+}
+
+//enable user
+const user_enable = async function(req,res)
+{
+    var uid=req.params.uid;
+    var errors=[];
+    try
+    {
+              await db.user_data.update( {
+                status: 'current' 
+              },
+              {
+                where: { user_id: uid }
+              });
+              req.flash('alerts1', 'User Enabled Successfully');
+              res.redirect('/user/umanage/0');
+      
+    }catch(err){console.log(err)}
+       
+}
 
 
 //Update user getting the form
 const update_user1 = async function(req,res)
 {
+    var success=[];
+    var errors=[];
     var uid=req.params.uid;
     
     try
@@ -268,7 +411,7 @@ const update_user1 = async function(req,res)
               }
            }
       );
-      res.render('../views/system_admin/updateuser',{users,alertsm : ""});
+      res.render('../views/system_admin/updateuser',{users,success,errors,alertsm : ""});
 
     }catch(err){console.log(err)}
      
@@ -277,16 +420,173 @@ const update_user1 = async function(req,res)
 
 
 
+
+
 //Update user getting the form
 const update_user2 = async function(req,res)
 {
     var uid=req.body.user_id;
     var params= req.body;
-    
+    var errors=[];  
+    var success=[];  
     try
     {
+
+      if(! validator.validate(req.body.email))
+      {
+        errors.push({ msg: 'Invalid Email' });
+      }
+      if(! validatePhoneNumber.validate(req.body.phonenumber))
+      {
+        errors.push({ msg: 'Invalid Phone Number' });
+      }
     
-       await db.user_data.update(params,
+     
+      if (errors.length==0)
+      {  
+
+                const u_info = await db.user_data.findOne(
+                  {
+                      where:{
+                        user_id:uid
+                      }
+                  }
+                );
+
+              if(u_info.email!=req.body.email)
+              {
+                            const users_count = await db.user_data.count(
+                              {
+                                  where:{
+                                    email:req.body.email
+                                  }
+                              }
+                            );
+                            if(users_count>0)
+                              {
+                              errors.push({ msg: 'User With Particular email Already Exist' });
+                              }
+
+              
+              } 
+
+              if(u_info.email!=req.body.email)
+              {
+                        const users_id_count = await db.user_data.count(
+                          {
+                              where:{
+                                identification:req.body.identification
+                              }
+                          }
+                        );
+                        if(users_id_count>0)
+                        {
+                        errors.push({ msg: 'User With Particular ID Already Exist' });
+                        }
+                        
+                      
+              }  
+
+              if(u_info.phonenumber!=req.body.phonenumber)
+              {
+                const users_phone_count = await db.user_data.count(
+                  {
+                      where:{
+                        phonenumber:req.body.phonenumber
+                      }
+                  }
+                );
+
+                if(users_phone_count>0)
+                {
+                errors.push({ msg: 'Phone number Already Registered by another user' });
+                }          
+
+              } 
+        
+              
+              if (errors.length==0)
+               { 
+                        await db.user_data.update(params,
+                            {
+                                where:{
+                                  user_id:uid
+                                }
+                            }
+                        );              
+                        req.flash('alerts1', 'User Updated Successfully');
+                        res.redirect('/user/umanage/0');
+                }
+              else
+              {
+
+                const users = await db.user_data.findOne(
+                  {
+                      where:{
+                        user_id:uid
+                      }
+                   }
+              );
+              res.render('../views/system_admin/updateuser',{users,success,errors,alertsm : ""});
+    
+                      
+              }  
+      }
+      else
+      {
+                const users = await db.user_data.findOne(
+                  {
+                      where:{
+                        user_id:uid
+                      }
+                  }
+              );
+              res.render('../views/system_admin/updateuser',{users,success,errors,alertsm : ""});
+
+      }        
+
+    }catch(err){console.log(err)}
+     
+   
+  } 
+
+
+ 
+//userpassword reset
+const user_password_reset = async function(req,res)
+{
+    var uid=req.params.uid;
+
+    try
+    {
+      
+      const u_info = await db.user_data.findOne(
+        {
+            where:{
+              user_id:uid
+            }
+        }
+      );
+
+
+       //generate a user passowrd
+       var passwd = generator.generate({
+        length: 8,
+        numbers: true
+      });
+
+    //encrypt the password
+    
+    var salt = bcrypt.genSaltSync(10);
+    var hash = bcrypt.hashSync(passwd, salt);
+  
+
+  //sending username and password to the user
+  message = "Your Delhi University Online Voting System Account has been reset ,your username is : "+u_info.email+" and new password is : "+passwd;
+  var options = {authorization : 'bRVqwyt6GYT7mNQzvkFOpSnhoC09XrEM8gZKA1dielPc25sBJLoUOnWaCl68usGf23FjKwdk1mADy54N' , message : message ,  numbers : [u_info.phonenumber]} 
+  fast2sms.sendMessage(options).then(response=>{console.log(response)}) 
+    
+       await db.user_data.update({password:hash},
           {
               where:{
                 user_id:uid
@@ -295,13 +595,16 @@ const update_user2 = async function(req,res)
       );
   
       
-    const users = await db.user_data.findAll();
-    res.render('../views/system_admin/usermanager',{users,alertsm : "User updated Successfully"});
+      req.flash('alerts1', 'Password Was Reset Successfully & Details sent');
+      res.redirect('/user/umanage/0');
 
     }catch(err){console.log(err)}
      
    
   } 
+
+
+
 
 
 
@@ -441,6 +744,7 @@ const user_change_password = async function(req,res){
   
   }
 
+
   //getting a form
 
   const user_change_password_get = async function(req,res){
@@ -448,7 +752,7 @@ const user_change_password = async function(req,res){
     var success = [];
     
                 res.render('../views/system_admin/changepassword',{success,errors}); 
-                console.log('error 1');
+                
     
                  
     
@@ -456,4 +760,4 @@ const user_change_password = async function(req,res){
 
 
 
- module.exports= {user_change_password_get,user_change_password,user_dashboard_get,user_router,user_register_get,save,manage,delete_user,update_user1,update_user2,login_handler,logout_handler,isAuthenticated,isAuthenticated_role}
+ module.exports= {user_enable,user_disable,user_password_reset,user_change_password_get,user_change_password,user_dashboard_get,user_router,user_register_get,save,manage,delete_user,update_user1,update_user2,login_handler,logout_handler,isAuthenticated,isAuthenticated_role}

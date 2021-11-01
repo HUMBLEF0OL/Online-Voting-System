@@ -90,7 +90,17 @@
                         <div class="d-flex d-sm-block d-md-flex align-items-center">
                           <h2 class="mb-0"><%= free_mem_in_gb %> GB Free</h2>
                         </div>
-                        <p class="text-success mt-2 mb-0 font-weight-medium"><%= free_mem_in_mb %> MB equivalent</p>
+                        <%
+                         if(free_mem_in_gb < 1)
+                         {
+                         %>
+                          <p class="text-success mt-2 mb-0 font-weight-medium">Memory Running Low</p>
+                        <% } else {%>
+                        <p class="text-success mt-2 mb-0 font-weight-medium">Enough Memory</p>
+                        <%
+                         }  
+                        %>
+                        
                       </div>
                       <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
                         <i class="icon-lg mdi mdi-chip text-success ml-auto"></i>
@@ -191,7 +201,7 @@
                       </div>
                       <div class="col-3">
                         <div class="icon icon-box-success">
-                          <span class="mdi mdi-email-outline icon-item"></span>
+                          <span class="mdi mdi-account-minus icon-item"></span>
                         </div>
                       </div>
                     </div>
@@ -211,7 +221,7 @@
                       </div>
                       <div class="col-3">
                         <div class="icon icon-box-success ">
-                          <span class="mdi mdi-email-open-outline  icon-item"></span>
+                          <span class="mdi mdi-account-check   icon-item"></span>
                         </div>
                       </div>
                     </div>
