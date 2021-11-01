@@ -5,15 +5,28 @@ const _ = require('lodash');
 
 const candidate_register_get =  async function(req,res)
 {
-
+  const pageAsNumber = Number.parseInt(req.params.pagen);
+  let page = 0;
+  let size = 6; //number of records per page
+  if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+    page = pageAsNumber;
+  }
   const elections = await db.election_data.findAll({
+    limit: size,
+    offset: page * size,
     where: {
       status: "not_started"
     },
     order:  [['election_id', 'DESC']]
 
   });
-  res.render('./election_admin/candidates/reg1',{elections,alertsm : ""});
+  const totalElection = await db.election_data.count({
+    where: {
+      status: ["not_started","running"],
+    },
+  });
+  const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
+  res.render('./election_admin/candidates/reg1',{elections,totalPages,page,alertsm : ""});
   
 }
 
@@ -91,10 +104,15 @@ else {
   params.user_id=users.user_id;
 
   console.log(params);
+  console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n "+req.body.position_id);
+  const existing = await db.candidate_data.findAll({
+      where: {
+        election_id: eid,
+        position_id:req.body.position_id,
+        user_id:params.user_id
+      }
+      
   
-  //saving election data to database
-  await db.candidate_data.create(params).catch(function(err){
-    console.log(err)
     });
 
     const positions = await db.position_data.findAll({
@@ -104,10 +122,20 @@ else {
       order:  [['position_name', 'ASC']]
   
     });
-    
- 
-      res.render('./election_admin/candidates/reg2',{positions,eid,alerte:"",alertsm : "Candidate Registered Successfully"});
-        //res.send(positions);
+    if(existing.length>0)
+    {
+      res.render('./election_admin/candidates/reg2',{positions,eid,alerte:"",alertsm : "Candidate Already Registered"});
+
+    }
+    else{
+      //saving election data to database
+      await db.candidate_data.create(params).catch(function(err){
+        console.log(err)
+        });
+        res.render('./election_admin/candidates/reg2',{positions,eid,alerte:"",alertsm : "Candidate Registered Successfully"});
+
+    }
+  
 
 
  
@@ -121,19 +149,29 @@ else {
 //candidate manager
 const manage = async function(req,res)
 {
-
+  const pageAsNumber = Number.parseInt(req.params.pagen);
+  let page = 0;
+  let size = 6; //number of records per page
+  if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+    page = pageAsNumber;
+  }
     
   var eid=req.params.eid;
 
-  
-
   const positions = await db.position_data.findAll({
+    limit: size,
+    offset: page * size,
     include: ['candidate','election'] ,  required: true , where :{ election_id : eid} 
   });
 
-    
+  const totalPositions = await db.position_data.count({
+    where: {
+      election_id : eid
+    },
+  });
+  const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
      //res.send(positions);
-    res.render('./election_admin/candidates/manage',{positions,alertsm : ""});
+    res.render('./election_admin/candidates/manage',{positions,totalPages,page,eid,alertsm : ""});
   
 }
 
@@ -144,16 +182,32 @@ const manage2 = async function(req,res)
 
     
   var pid=req.params.pid;
-
+  var eid=req.params.eid;
+  const pageAsNumber = Number.parseInt(req.params.pagen);
+  let page = 0;
+  let size = 6; //number of records per page
+  if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+    page = pageAsNumber;
+  }
+    
+  
   
 
   const candidates = await db.candidate_data.findAll({
+    limit: size,
+    offset: page * size,
     include: ['position','user_info'] ,  required: true , where :{ position_id : pid} 
   });
 
-    
+  const totalCandidates = await db.candidate_data.count({
+    where: {
+      election_id : eid,
+      position_id : pid
+    },
+  });
+  const totalPages =  Math.ceil(totalCandidates/ Number.parseInt(size));
      //res.send(positions);
-    res.render('./election_admin/candidates/manage2',{candidates,alertsm : ""});
+    res.render('./election_admin/candidates/manage2',{candidates,totalPages,page,eid,pid,alertsm : ""});
   
 }
 
@@ -179,13 +233,29 @@ const delete_candidate = async function(req,res)
         where: { candidate_id: cid }
       })
 
+      var pid=req.params.pid;
+      var eid=req.params.eid;
+      const pageAsNumber = Number.parseInt(req.params.pagen);
+      let page = 0;
+      let size = 6; //number of records per page
+      if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+        page = pageAsNumber;
+      }
       const candidates = await db.candidate_data.findAll({
+        limit: size,
+        offset: page * size,
         include: ['position','user_info'] ,  required: true , where :{ position_id : pid} 
       });
     
-        
-     
-        res.render('./election_admin/candidates/manage2',{candidates,alertsm : "Candidate Deleted Successfully"});
+      console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n working till now!"+pid+" "+req.params.eid);
+     const totalCandidates = await db.candidate_data.count({
+      where: {
+        // election_id : req.params.eid,
+        position_id : req.params.pid
+      },
+    });
+    const totalPages =  Math.ceil(totalCandidates/ Number.parseInt(size));
+    res.render('./election_admin/candidates/manage2',{candidates,totalPages,page,pid,eid,alertsm : "Candidate Deleted Successfully"});
   
 
     }catch(err){console.log(err)}
@@ -258,15 +328,31 @@ const update_candidate= async function(req,res)
       where: { candidate_id: req.body.candidate_id }
     });
 
+    const pageAsNumber = Number.parseInt(req.params.pagen);
+    let page = 0;
+    let size = 6; //number of records per page
+    if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+      page = pageAsNumber;
+    }
 
+    
+    var eid=req.params.eid;
 
+    
     const positions = await db.position_data.findAll({
+      limit: size,
+      offset: page * size,
       include: ['candidate','election'] ,  required: true , where :{ election_id : req.body.election_id } 
     });
-  
-      
+    const totalPositions = await db.position_data.count({
+      where: {
+        election_id : req.body.election_id
+      },
+    });
+
+    const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
        //res.send(positions);
-      res.render('./election_admin/candidates/manage',{positions,alertsm : "Candidate Updated Successfully"});
+      res.render('./election_admin/candidates/manage',{positions,totalPages,page,eid,alertsm : "Candidate Updated Successfully"});
  
 
 
@@ -343,16 +429,27 @@ const disqualify_candidate= async function(req,res)
     });
 
 
+    const pageAsNumber = Number.parseInt(req.params.pagen);
+    let page = 0;
+    let size = 6; //number of records per page
+    if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+      page = pageAsNumber;
+    }
 
     const positions = await db.position_data.findAll({
+      limit: size,
+      offset: page * size,
       include: ['candidate','election'] ,  required: true , where :{ election_id : req.params.eid } 
     });
-  
-      
+    var eid=req.params.eid;
+    const totalPositions = await db.position_data.count({
+      where: {
+        election_id : eid
+      },
+    });
+    const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
        //res.send(positions);
-      res.render('./election_admin/candidates/manage',{positions,alertsm : "Candidate Disqualified Successfully"});
- 
-
+      res.render('./election_admin/candidates/manage',{positions,totalPages,page,alertsm : "Candidate Disqualified Successfully"});
 
   }catch(err){console.log(err);}
 

@@ -232,7 +232,7 @@
               <h4 class="card-title"><%= position.position_name %></h4>
               
               <div class="table-responsive">
-                <table class="table">
+                <table class="table ">
                   <thead>
                     <tr>
                    
@@ -288,31 +288,9 @@
            
 
           </div>
-          <%  }else{%>
+          <%  }%>
 
-            <div class="row mx-auto">
-        <div class="col-12 grid-margin mx-auto >
-          <div class="card">
-            <div class="card-body">
-
-              
-                <div class="alert alert-warning" role="alert" style="text-align: center;">
-            No candidate registered for <strong> <%= position.position_name %> </strong>
-          </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-
-
-
-
-
-
-
-            <% }%>
+            
          
         <% }) %>
        
@@ -323,17 +301,15 @@
            
 
           <% }%>
-   
 
+    </div> 
 
-        <!-- main-panel ends -->
-   
-      <footer class="footer">
+    <footer class="footer">
         <%- include('../partials/footer.ejs') %>
       </footer>
-      <!-- page-body-wrapper ends -->
-    </div> 
     
+
+      
      <!-- adding scripts -->
     <%- include('../partials/script.ejs') %>
   </body>
