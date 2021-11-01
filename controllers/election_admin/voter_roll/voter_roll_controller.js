@@ -212,14 +212,31 @@ const disqualify_voter= async function(req,res)
         }
       })
 
+      const pageAsNumber = Number.parseInt(req.params.pagen);
+      let page = 0;
+      let size = 10; //number of records per page
+      if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+        page = pageAsNumber;
+      }
+
       const elections = await db.election_data.findAll({
+        limit: size,
+        offset: page * size,
         where: {
           status: ["not_started","running"],
         },
         order:  [['election_id', 'DESC']]
     
       });
-      res.render('./election_admin/voter_roll/manageV',{elections,alertsm : "Changes Saved"});
+
+      const totalElection = await db.election_data.count({
+        where: {
+          status: ["not_started","running"],
+        },
+    
+      });
+      const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
+      res.render('./election_admin/voter_roll/manageV',{elections,totalPages,page,alertsm : "Changes Saved"});
    
   
   

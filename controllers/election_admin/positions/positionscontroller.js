@@ -105,17 +105,29 @@ const delete_position = async function(req,res)
 
       
 
-
+      const pageAsNumber = Number.parseInt(req.params.pagen);
+      let page = 0;
+      let size = 5; //number of records per page
+      if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+        page = pageAsNumber;
+      }
 
 
       const positions = await db.position_data.findAll({
+        limit: size,
+        offset: page * size,
         where: {
           election_id: eid1
         },include: ['election']
         
       });
-
-        res.render('./election_admin/positions/manage',{positions,alertsm : "Position Deleted Successfully"});
+      const totalPositions = await db.position_data.count({
+        where: {
+          election_id: eid1
+        }
+      });
+      const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
+        res.render('./election_admin/positions/manage',{positions,totalPages,page,alertsm : "Position Deleted Successfully"});
   
 
     }catch(err){console.log(err)}
@@ -207,6 +219,13 @@ const update_position = async function(req,res)
   try
 
 {
+      const pageAsNumber = Number.parseInt(req.params.pagen);
+      let page = 0;
+      let size = 5; //number of records per page
+      if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+        page = pageAsNumber;
+      }
+
   const test = await db.position_data.update(
     {
       position_name: req.body.position_name 
@@ -218,13 +237,21 @@ const update_position = async function(req,res)
 
 
     const positions = await db.position_data.findAll({
+      limit: size,
+      offset: page * size,
       where: {
         election_id: req.body.election_id
       },include: ['election']
       
     });
-
-      res.render('./election_admin/positions/manage',{positions,alertsm : "Position updated Successfully"});
+    const totalPositions = await db.position_data.count({
+      where: {
+        election_id: req.body.election_id
+      },
+    });
+    const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
+    let eid = req.body.election_id;
+    res.render('./election_admin/positions/manage',{positions,totalPages,page,eid,alertsm : "Position updated Successfully"});
 
 
 

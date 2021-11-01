@@ -5,7 +5,7 @@ const router = require('express').Router()
 const candidatescontroller = require('../../../controllers/election_admin/candidates/candidatecontroller');
 const {isAuthenticated} = require('../../../controllers/election_admin/elections/electionController');
 
-router.get('/cregister',isAuthenticated,candidatescontroller.candidate_register_get);  
+router.get('/cregister/:pagen',isAuthenticated,candidatescontroller.candidate_register_get);  
 
 
 router.get('/register2/:eid',isAuthenticated,candidatescontroller.candidate_register_get2);   
@@ -13,7 +13,7 @@ router.get('/register2/:eid',isAuthenticated,candidatescontroller.candidate_regi
 
 router.post('/save',isAuthenticated,candidatescontroller.save_candidate);
 
-router.get('/manage/:eid',isAuthenticated,candidatescontroller.manage);
+router.get('/manage/:eid/:pagen',isAuthenticated,candidatescontroller.manage);
 
 
 router.get('/manage2/:pid/:eid',isAuthenticated,candidatescontroller.manage2);

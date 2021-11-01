@@ -5,15 +5,28 @@ const _ = require('lodash');
 
 const candidate_register_get =  async function(req,res)
 {
-
+  const pageAsNumber = Number.parseInt(req.params.pagen);
+  let page = 0;
+  let size = 6; //number of records per page
+  if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+    page = pageAsNumber;
+  }
   const elections = await db.election_data.findAll({
+    limit: size,
+    offset: page * size,
     where: {
       status: "not_started"
     },
     order:  [['election_id', 'DESC']]
 
   });
-  res.render('./election_admin/candidates/reg1',{elections,alertsm : ""});
+  const totalElection = await db.election_data.count({
+    where: {
+      status: ["not_started","running"],
+    },
+  });
+  const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
+  res.render('./election_admin/candidates/reg1',{elections,totalPages,page,alertsm : ""});
   
 }
 
@@ -136,19 +149,29 @@ else {
 //candidate manager
 const manage = async function(req,res)
 {
-
+  const pageAsNumber = Number.parseInt(req.params.pagen);
+  let page = 0;
+  let size = 6; //number of records per page
+  if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+    page = pageAsNumber;
+  }
     
   var eid=req.params.eid;
 
-  
-
   const positions = await db.position_data.findAll({
+    limit: size,
+    offset: page * size,
     include: ['candidate','election'] ,  required: true , where :{ election_id : eid} 
   });
 
-    
+  const totalPositions = await db.position_data.count({
+    where: {
+      election_id : eid
+    },
+  });
+  const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
      //res.send(positions);
-    res.render('./election_admin/candidates/manage',{positions,alertsm : ""});
+    res.render('./election_admin/candidates/manage',{positions,totalPages,page,eid,alertsm : ""});
   
 }
 
@@ -273,15 +296,33 @@ const update_candidate= async function(req,res)
       where: { candidate_id: req.body.candidate_id }
     });
 
+    const pageAsNumber = Number.parseInt(req.params.pagen);
+    let page = 0;
+    let size = 6; //number of records per page
+    if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+      page = pageAsNumber;
+    }
 
+    
+    var eid=req.params.eid;
 
+    
     const positions = await db.position_data.findAll({
+      limit: size,
+      offset: page * size,
       include: ['candidate','election'] ,  required: true , where :{ election_id : req.body.election_id } 
     });
-  
-      
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n working till now and page number is "+page+" "+page*size);
+    const totalPositions = await db.position_data.count({
+      where: {
+        election_id : req.body.election_id
+      },
+    });
+
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n working till now and page number is "+page+" "+page*size);
+    const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
        //res.send(positions);
-      res.render('./election_admin/candidates/manage',{positions,alertsm : "Candidate Updated Successfully"});
+      res.render('./election_admin/candidates/manage',{positions,totalPages,page,eid,alertsm : "Candidate Updated Successfully"});
  
 
 
@@ -358,16 +399,27 @@ const disqualify_candidate= async function(req,res)
     });
 
 
+    const pageAsNumber = Number.parseInt(req.params.pagen);
+    let page = 0;
+    let size = 6; //number of records per page
+    if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+      page = pageAsNumber;
+    }
 
     const positions = await db.position_data.findAll({
+      limit: size,
+      offset: page * size,
       include: ['candidate','election'] ,  required: true , where :{ election_id : req.params.eid } 
     });
-  
-      
+    var eid=req.params.eid;
+    const totalPositions = await db.position_data.count({
+      where: {
+        election_id : eid
+      },
+    });
+    const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
        //res.send(positions);
-      res.render('./election_admin/candidates/manage',{positions,alertsm : "Candidate Disqualified Successfully"});
- 
-
+      res.render('./election_admin/candidates/manage',{positions,totalPages,page,alertsm : "Candidate Disqualified Successfully"});
 
   }catch(err){console.log(err);}
 
