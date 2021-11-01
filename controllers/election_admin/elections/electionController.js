@@ -14,8 +14,19 @@ const election_register_get = function (req, res) {
 }
 //election manager
 const manage = async function (req, res) {
-  const elections = await db.election_data.findAll();
-  res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: "" });
+  const pageAsNumber = Number.parseInt(req.params.pagen);
+  let page = 0;
+  let size = 6; //number of records per page
+  if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+    page = pageAsNumber;
+  }
+  const elections = await db.election_data.findAll({
+    limit: size,
+    offset: page * size,
+  });
+  const totalElection = await db.election_data.count();
+  const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
+  res.render('../views/election_admin/elections/electionmanager', { elections,totalPages,page, alertsm: "" });
 }
 
 // calculating results

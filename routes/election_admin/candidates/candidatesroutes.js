@@ -16,7 +16,7 @@ router.post('/save',isAuthenticated,candidatescontroller.save_candidate);
 router.get('/manage/:eid/:pagen',isAuthenticated,candidatescontroller.manage);
 
 
-router.get('/manage2/:pid/:eid',isAuthenticated,candidatescontroller.manage2);
+router.get('/manage2/:pid/:eid/:pagen',isAuthenticated,candidatescontroller.manage2);
 
 
 router.get('/delete/:cid/:pid',isAuthenticated,candidatescontroller.delete_candidate);

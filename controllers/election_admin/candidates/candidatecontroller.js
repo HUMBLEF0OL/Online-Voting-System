@@ -182,16 +182,32 @@ const manage2 = async function(req,res)
 
     
   var pid=req.params.pid;
-
+  var eid=req.params.eid;
+  const pageAsNumber = Number.parseInt(req.params.pagen);
+  let page = 0;
+  let size = 6; //number of records per page
+  if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+    page = pageAsNumber;
+  }
+    
+  
   
 
   const candidates = await db.candidate_data.findAll({
+    limit: size,
+    offset: page * size,
     include: ['position','user_info'] ,  required: true , where :{ position_id : pid} 
   });
 
-    
+  const totalCandidates = await db.candidate_data.count({
+    where: {
+      election_id : eid,
+      position_id : pid
+    },
+  });
+  const totalPages =  Math.ceil(totalCandidates/ Number.parseInt(size));
      //res.send(positions);
-    res.render('./election_admin/candidates/manage2',{candidates,alertsm : ""});
+    res.render('./election_admin/candidates/manage2',{candidates,totalPages,page,eid,pid,alertsm : ""});
   
 }
 
@@ -217,13 +233,29 @@ const delete_candidate = async function(req,res)
         where: { candidate_id: cid }
       })
 
+      var pid=req.params.pid;
+      var eid=req.params.eid;
+      const pageAsNumber = Number.parseInt(req.params.pagen);
+      let page = 0;
+      let size = 6; //number of records per page
+      if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+        page = pageAsNumber;
+      }
       const candidates = await db.candidate_data.findAll({
+        limit: size,
+        offset: page * size,
         include: ['position','user_info'] ,  required: true , where :{ position_id : pid} 
       });
     
-        
-     
-        res.render('./election_admin/candidates/manage2',{candidates,alertsm : "Candidate Deleted Successfully"});
+      console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n working till now!"+pid+" "+req.params.eid);
+     const totalCandidates = await db.candidate_data.count({
+      where: {
+        // election_id : req.params.eid,
+        position_id : req.params.pid
+      },
+    });
+    const totalPages =  Math.ceil(totalCandidates/ Number.parseInt(size));
+    res.render('./election_admin/candidates/manage2',{candidates,totalPages,page,pid,eid,alertsm : "Candidate Deleted Successfully"});
   
 
     }catch(err){console.log(err)}
@@ -312,14 +344,12 @@ const update_candidate= async function(req,res)
       offset: page * size,
       include: ['candidate','election'] ,  required: true , where :{ election_id : req.body.election_id } 
     });
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n working till now and page number is "+page+" "+page*size);
     const totalPositions = await db.position_data.count({
       where: {
         election_id : req.body.election_id
       },
     });
 
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n working till now and page number is "+page+" "+page*size);
     const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
        //res.send(positions);
       res.render('./election_admin/candidates/manage',{positions,totalPages,page,eid,alertsm : "Candidate Updated Successfully"});
