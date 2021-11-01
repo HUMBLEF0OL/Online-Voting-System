@@ -5,15 +5,28 @@ const _ = require('lodash');
 
 const positions_register_get =  async function(req,res)
 {
-
+  const pageAsNumber = Number.parseInt(req.params.pagen);
+  let page = 0;
+  let size = 10; //number of records per page
+  if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+    page = pageAsNumber;
+  }
   const elections = await db.election_data.findAll({
+    limit: size,
+    offset: page * size,
     where: {
       status: "not_started"
     },
     order:  [['election_id', 'DESC']]
 
   });
-  res.render('./election_admin/positions/reg1',{elections,alertsm : ""});
+  const totalElection = await db.election_data.count({
+    where: {
+      status: "not_started"
+    },
+  });
+  const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
+  res.render('./election_admin/positions/reg1',{elections,totalPages,page,alertsm : ""});
   
 }
 
@@ -44,21 +57,32 @@ const positions_register_get2 =  async function(req,res)
 //positions manager
 const manage = async function(req,res)
 {
-
-    
+  const pageAsNumber = Number.parseInt(req.params.pagen);
+  let page = 0;
+  let size = 5; //number of records per page
+  if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+    page = pageAsNumber;
+  }
   var eid=req.params.eid;
 
   const positions = await db.position_data.findAll({
+    limit: size,
+    offset: page * size,
     where: {
       election_id: eid
     }
     ,include: ['election']
     
   });
- 
+  const totalPositions = await db.position_data.count({
+    where: {
+      election_id: eid
+    }
+  });
+  const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
     
   //res.send(positions);
-   res.render('./election_admin/positions/manage',{positions,alertsm : ""});
+   res.render('./election_admin/positions/manage',{positions,totalPages,page,eid,alertsm : ""});
   
 }
 

@@ -314,12 +314,8 @@ const electionInfo = async(req,res) => {
 
     //Getting the data of elections from database
     const electionData = await db.election_data.findAll({
-<<<<<<< HEAD
-        
-=======
         limit: size,
         offset: page * size
->>>>>>> 06ebacee6794118126ce47406e180039ba08bf53
     });
 
     const totalElection = await db.election_data.count({});

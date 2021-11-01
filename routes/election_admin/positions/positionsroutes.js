@@ -5,7 +5,7 @@ const router = require('express').Router()
 const positionscontroller = require('../../../controllers/election_admin/positions/positionscontroller');
 const { isAuthenticated } = require('../../../controllers/election_admin/elections/electionController');
 
-router.get('/pregister', isAuthenticated, positionscontroller.positions_register_get);
+router.get('/pregister/:pagen', isAuthenticated, positionscontroller.positions_register_get);
 
 router.get('/register2/:eid', isAuthenticated, positionscontroller.positions_register_get2);
 
@@ -16,7 +16,7 @@ router.post('/save/:eid', isAuthenticated, positionscontroller.save);
 
 
 //manage election
-router.get('/manage/:eid', isAuthenticated, positionscontroller.manage);
+router.get('/manage/:eid/:pagen', isAuthenticated, positionscontroller.manage);
 
 //delete
 router.get('/delete/:pid/:eid', isAuthenticated, positionscontroller.delete_position);

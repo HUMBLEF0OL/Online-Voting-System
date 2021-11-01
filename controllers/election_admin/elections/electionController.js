@@ -370,15 +370,16 @@ function scheduling(election_one)
   var year = start_date.getFullYear();
   
   
-  var pseudo_date = year.toString()+"-"+month.toString()+"-"+day.toString()+"T";
-  start_date = new Date(pseudo_date+time);
+  var pseudo_date = year.toString()+"-"+month.toString()+"-"+day.toString();
+  start_date = new Date(pseudo_date+' '+ time);
   
-  
+
   var hour= start_date.getHours();
   var min= start_date.getMinutes();
   
   var cron_date = '0 '+min.toString()+' '+hour.toString()+' '+day.toString()+' '+month.toString()+' *';
   
+
   cron.schedule(cron_date,async function(){
     try {
       
@@ -407,8 +408,8 @@ function scheduling(election_one)
   var year = stop_date.getFullYear();
   
   
-  var pseudo_date = year.toString()+"-"+month.toString()+"-"+day.toString()+"T";
-  stop_date = new Date(pseudo_date+time);
+  var pseudo_date = year.toString()+"-"+month.toString()+"-"+day.toString();
+  stop_date = new Date(pseudo_date+' '+time);
   
   
   var hour= stop_date.getHours();
@@ -416,7 +417,6 @@ function scheduling(election_one)
   
   var cron_date = '0 '+min.toString()+' '+hour.toString()+' '+day.toString()+' '+month.toString()+' *';
   
-console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n pseudo_date "+pseudo_date+" "+"stop_date "+stop_date+" "+"hour "+hour+" "+"min "+min+"\n"+"cron_date "+cron_date+"\n\n\n\n");
 
 
   cron.schedule(cron_date,async function(){
@@ -477,10 +477,10 @@ const verify = async function (req, res) {
 
 
       success = "Election  : " + election_one.title + " with ID: " + election_one.election_display_id + " is Successfully Registered";
-
+      console.log(success);
       alerts.success = success;
 
-        scheduling(election_one);
+      scheduling(election_one);
 
       const elections = await db.election_data.findAll();
       res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: success });
