@@ -10,12 +10,12 @@ module.exports = function(passport) {
       // Match user
        db.user_data.findOne({
         where:{
-        email: email
+        email: email,status:'current' 
         }
       }).then(user => {
         if (!user) {
           
-          return done(null, false, { msg: 'That email is not registered' });
+          return done(null, false, { msg: 'That email is not registered or account disabled' });
         }
 
         // Match password

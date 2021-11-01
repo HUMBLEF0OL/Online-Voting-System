@@ -22,9 +22,16 @@ router.get('/umanage/:pagen',sysadmincontroller.isAuthenticated,sysadmincontroll
 
 router.get('/udelete/:uid',sysadmincontroller.isAuthenticated,sysadmincontroller.delete_user); 
 
+router.get('/upreset/:uid',sysadmincontroller.isAuthenticated,sysadmincontroller.user_password_reset); 
+
+router.get('/udisable/:uid',sysadmincontroller.isAuthenticated,sysadmincontroller.user_disable);
+
+router.get('/uenable/:uid',sysadmincontroller.isAuthenticated,sysadmincontroller.user_enable);
+
 router.get('/uupdate1/:uid',sysadmincontroller.isAuthenticated,sysadmincontroller.update_user1); 
 
 router.post('/uupdate2',sysadmincontroller.isAuthenticated,sysadmincontroller.update_user2); 
+
 
 router.post('/login',sysadmincontroller.login_handler); 
 

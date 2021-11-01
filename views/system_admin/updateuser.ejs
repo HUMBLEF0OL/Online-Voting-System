@@ -50,27 +50,11 @@
                   </div>
                 </div>
               </div>
-              <%
+              <%- include ('./partials/messages'); %>
 
-              if(alertsm.length>0)
-              {
-      
-      
-      %>
-              
-                <br />
-                 <div class="alert alert-success" style="text-align: center;">
-                    <strong>Success!</strong>  <%= alertsm %>
-                  </div>
-                  <br />
-                  <%
-                
-                
-                  }
-      
-                 %>
-            <br /><br />             
+              <br /><br />            
             <div class="row">
+      
               <div class="col-lg-8 mx-auto">
                 <div class="card">
                   <div class="card-body">
@@ -107,18 +91,36 @@
                       </div>
 
                       <div class="form-group">
+                        <% 
+                        var voterc="";
+                        var adminc="";
+                        var edminc="";
+
+                        if(users.role=='voter') 
+                           {
+                            voterc="checked";
+                           }
+                         else if(users.role=='admin') 
+                           {
+                            adminc="checked";
+                           }
+                           else
+                           {
+                            edminc="checked";
+                           }
+                           %>
                         <div class="form-check">
                           <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="role" id="role" value="voter" checked> Voter </label>
-                        </div>
+                            <input type="radio" class="form-check-input" name="role" id="role" value="voter" <%= voterc %>> Voter </label>
+                          </div>
                         <div class="form-check">
                           <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="role" id="role" value="e_admin">Election Administrator </label>
+                            <input type="radio" class="form-check-input" name="role" id="role" value="e_admin" <%= edminc %>>Election Administrator </label>
                         </div>
 
                         <div class="form-check">
                           <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="role" id="role" value="admin" >System Administrator  </label>
+                            <input type="radio" class="form-check-input" name="role" id="role" value="admin" <%= adminc %>>System Administrator  </label>
                         </div>
                   
                       </div>
