@@ -1,7 +1,7 @@
 {
   "name": "node",
   "version": "1.0.0",
-  "description": "",
+  "description": "Group Project",
   "main": "filesys.js",
   "directories": {
     "doc": "docs"
@@ -38,5 +38,15 @@
     "sequelize": "^6.6.5",
     "sequelize-cli": "^6.2.0",
     "validate-phone-number-node-js": "0.0.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Binary-Beasts-One/DU_Online_Voting_System.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/Binary-Beasts-One/DU_Online_Voting_System/issues"
+  },
+  "homepage": "https://github.com/Binary-Beasts-One/DU_Online_Voting_System#readme"
 }

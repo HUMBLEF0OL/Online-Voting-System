@@ -17,7 +17,7 @@ router.post('/registration-verify',electioncontroller.isAuthenticated,electionco
 
 // stop election
 //manage election
-router.get('/manage/:pagen',electioncontroller.isAuthenticated,electioncontroller.manage);
+router.get('/emanage/:pagen',electioncontroller.isAuthenticated,electioncontroller.manage);
 
 //delete election
 router.get('/delete/:eid',electioncontroller.isAuthenticated,electioncontroller.delete_election);
