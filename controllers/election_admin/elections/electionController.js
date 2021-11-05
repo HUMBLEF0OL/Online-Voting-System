@@ -22,7 +22,8 @@ const manage = async function (req, res) {
   const elections = await db.election_data.findAll({
     limit: size,
     offset: page * size,
-  });
+   order:  [['election_id', 'DESC']]
+});
   const totalElection = await db.election_data.count();
   const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
   res.render('../views/election_admin/elections/electionmanager', { elections,totalPages,page, alertsm: "" });
@@ -38,7 +39,7 @@ async function election_all()
 
   const elections = await db.election_data.findAll({
     limit: size,
-    offset: page * size,
+    offset: page * size,order:  [['election_id', 'DESC']]
   });
   const totalElection = await db.election_data.count();
   const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
