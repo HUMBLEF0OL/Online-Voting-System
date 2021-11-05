@@ -225,14 +225,23 @@ const update_position = async function(req,res)
       if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
         page = pageAsNumber;
       }
-
-  const test = await db.position_data.update(
-    {
-      position_name: req.body.position_name 
-    },
-    {
-      where: { position_id: req.body.position_id }
-    });
+      const existing = await db.position_data.findAll({
+        where:{ position_name: req.body.position_name}
+      });
+      if(existing.length<1)
+      {
+          await db.position_data.update(
+          {
+            position_name: req.body.position_name 
+          },
+          {
+            where: { position_id: req.body.position_id }
+          });
+          alertsm = "Position updated Successfully";
+      }
+      else{
+          alertsm = "Position already exist";
+      }
 
 
 
@@ -251,7 +260,7 @@ const update_position = async function(req,res)
     });
     const totalPages =  Math.ceil(totalPositions/ Number.parseInt(size));
     let eid = req.body.election_id;
-    res.render('./election_admin/positions/manage',{positions,totalPages,page,eid,alertsm : "Position updated Successfully"});
+    res.render('./election_admin/positions/manage',{positions,totalPages,page,eid,alertsm});
 
 
 
@@ -259,6 +268,7 @@ const update_position = async function(req,res)
   }catch(err){console.log(err);}
 
 }
+
 
 
 
