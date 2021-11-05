@@ -181,7 +181,7 @@
                                 </button>
                                 <div class="dropdown-menu">
                                   <a class="dropdown-item " href="/candidate/register2/<%= election.election_id %>">Register </a>
-                                  <a class="dropdown-item " href="/candidate/manage/<%= election.election_id %>/0">Manage </a>
+                                  <a class="dropdown-item " href="/candidate/manage/<%= election.election_id %>/0/">Manage </a>
                                   <a class="dropdown-item " href="/candidate/view/<%= election.election_id %>">View all </a>
                                 </div>
                               </div>
@@ -199,7 +199,7 @@
          
           </div>
 
-          <% }%>
+          
 
     </div> 
     
@@ -225,7 +225,7 @@
 
         </ul>
     </nav>
-
+    <% }%>
     <footer class="footer">
         <%- include('../partials/footer.ejs') %>
       </footer>

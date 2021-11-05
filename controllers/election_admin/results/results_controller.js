@@ -49,14 +49,35 @@ const publish_election = async function(req,res)
         where: { election_id: eid }
       });
 
+      //
+
+
+      const pageAsNumber = 0;
+      let page = 0;
+      let size = 5; //number of records per page
+      if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0){
+        page = pageAsNumber;
+      }
       const elections = await db.election_data.findAll({
+        limit: size,
+        offset: page * size,
         where: {
           status: ["completed"],
         },
         order:  [[['published']],['start_date', 'DESC']]
     
       });
-      res.render('../views/election_admin/results/manageR',{elections,alertsm : "Election Results Has been Published"});
+      const totalElection = await db.election_data.count({
+        
+        where: {
+          status: ["completed"],
+        },
+      });
+      const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
+    
+    
+      
+      res.render('./election_admin/results/manageR',{elections,totalPages,page,alertsm : "Election Results have been published"});
 
     }catch(err){console.log(err)}
      

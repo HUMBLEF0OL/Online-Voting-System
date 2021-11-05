@@ -181,7 +181,7 @@
                                 </button>
                                 <div class="dropdown-menu">
                                   <a class="dropdown-item " href="/position/register2/<%= election.election_id %>">Register </a>
-                                  <a class="dropdown-item " href="/position/manage/<%= election.election_id %>/0">Manage </a>
+                                  <a class="dropdown-item " href="/position/manage/<%= election.election_id %>/0/">Manage </a>
                                 </div>
                               </div>
                             </td>
@@ -198,7 +198,7 @@
          
           </div>
 
-          <% }%>
+          
    
     </div> 
 
@@ -224,6 +224,8 @@
 
         </ul>
     </nav>
+
+    <% }%>
     <footer class="footer">
       <%- include('../partials/footer.ejs') %>
     </footer>

@@ -148,7 +148,7 @@
                                   Action
                                 </button>
                                 <div class="dropdown-menu">
-                                  <a class="dropdown-item " href="/candidate/manage2/<%= position.position_id %>/<%= position.election.election_id %>/0">Manage</a>
+                                  <a class="dropdown-item " href="/candidate/manage2/<%= position.position_id %>/<%= position.election.election_id %>/0/">Manage</a>
                       
                                 </div>
                               </div>
@@ -166,8 +166,6 @@
          
           </div>
 
-          <% }%>
-   
 
     </div> 
     <nav aria-label="..." style="justify-content: center;">
@@ -192,7 +190,8 @@
 
         </ul>
     </nav>
-
+    <% }%>
+   
     <footer class="footer">
         <%- include('../partials/footer.ejs') %>
       </footer>
