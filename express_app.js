@@ -73,6 +73,7 @@ app.use(function(req, res, next) {
   res.locals.lname = req.session.lname;
   res.locals.role = req.session.role;
   res.locals.uid = req.session.uid;
+  res.locals.phonenumber = req.session.phonenumber;
   next();
 });
 

@@ -4,8 +4,7 @@ const fast2sms = require('fast-two-sms')
 const _ = require('lodash');
 const cron = require('node-cron')
 // sechduling a job
-
-
+const session = require('express-session');
 
 
 const election_register_get = function (req, res) {
@@ -28,6 +27,27 @@ const manage = async function (req, res) {
   const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
   res.render('../views/election_admin/elections/electionmanager', { elections,totalPages,page, alertsm: "" });
 }
+
+
+
+//election first page
+async function election_all()
+{
+  let page = 0;
+  let size = 6; //number of records per page
+
+  const elections = await db.election_data.findAll({
+    limit: size,
+    offset: page * size,
+  });
+  const totalElection = await db.election_data.count();
+  const totalPages =  Math.ceil(totalElection/ Number.parseInt(size));
+  //console.log("____________________________________11111111111");
+ // console.log(elections);
+
+   return {elections:elections,page:page,totalPages:totalPages};
+}
+
 
 // calculating results
 async function calculate_result(eid)
@@ -208,7 +228,7 @@ async function calculate_result(eid)
 //start election
 const start_election = async function (req, res) {
   var eid = req.params.eid;
-
+  let data = {};
   try {
     await db.election_data.update(
       {
@@ -218,8 +238,8 @@ const start_election = async function (req, res) {
         where: { election_id: eid }
       });
 
-    const elections = await db.election_data.findAll();
-    res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: "Election Has been Started" });
+    data = await  election_all();
+    res.render('../views/election_admin/elections/electionmanager', { elections:data.elections,totalPages:data.totalPages,page:data.page, alertsm: "Election Has been Started" });
 
   } catch (err) { console.log(err) }
 
@@ -240,12 +260,12 @@ const stop_election = async function (req, res) {
         where: { election_id: eid }
       });
 
-    const elections = await db.election_data.findAll();
+
     calculate_result(eid);
 
-
-    
-    res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: "Election Has been Completed" });
+    const data = await  election_all();
+    res.render('../views/election_admin/elections/electionmanager', { elections:data.elections,totalPages:data.totalPages,page:data.page, alertsm: "Election Has been Completed" });
+  
 
   } catch (err) { console.log(err) }
 
@@ -270,9 +290,9 @@ const publish_election = async function (req, res) {
         where: { election_id: eid }
       });
 
-    const elections = await db.election_data.findAll();
-    res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: "Election Results Has been Published" });
-
+    const data = await  election_all();
+    res.render('../views/election_admin/elections/electionmanager', { elections:data.elections,totalPages:data.totalPages,page:data.page, alertsm: "Election Results Has been Published"});
+    
   } catch (err) { console.log(err) }
 
 
@@ -289,9 +309,8 @@ const delete_election = async function (req, res) {
       });
 
 
-
-    const elections = await db.election_data.findAll();
-    res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: "Election Has been deleted" });
+    const data = await  election_all();
+    res.render('../views/election_admin/elections/electionmanager', { elections:data.elections,totalPages:data.totalPages,page:data.page, alertsm: "Election Has been deleted"});
 
   } catch (err) { console.log(err) }
 
@@ -358,8 +377,11 @@ const save = async function (req, res) {
 
     });
     //send otp to administrator
+    const phonenumber = await req.user.then(result => result.phonenumber);
+    console.log(phonenumber);
+    
     message = "Dear Election Admin ,Your One time pin in order to  schedule an election is " + otp_pin;
-    var options = { authorization: 'bRVqwyt6GYT7mNQzvkFOpSnhoC09XrEM8gZKA1dielPc25sBJLoUOnWaCl68usGf23FjKwdk1mADy54N', message: message, numbers: ['9773640463'] }
+    var options = { authorization: 'bRVqwyt6GYT7mNQzvkFOpSnhoC09XrEM8gZKA1dielPc25sBJLoUOnWaCl68usGf23FjKwdk1mADy54N', message: message, numbers: [phonenumber] }
     fast2sms.sendMessage(options).then(response => { console.log(response) })
 
     res.render('../views/election_admin/elections/otp_verify');
@@ -493,8 +515,9 @@ const verify = async function (req, res) {
 
       scheduling(election_one);
 
-      const elections = await db.election_data.findAll();
-      res.render('../views/election_admin/elections/electionmanager', { elections, alertsm: success });
+    
+      const data = await  election_all();
+      res.render('../views/election_admin/elections/electionmanager', { elections:data.elections,totalPages:data.totalPages,page:data.page, alertsm: success});
     }
 
 
