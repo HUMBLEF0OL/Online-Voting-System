@@ -240,11 +240,18 @@
                           var status_value="running";
 
                         }
-                        else
-                        {
-                          var class_css="badge badge-outline-danger";
-                          var status_value="Published";
-                        }
+                        else if (election.status=="completed")
+                          {  
+                            if(election.published == "yes")                        
+                            {
+                              var class_css="badge badge-outline-primary";
+                              var status_value="Published";
+                            }
+                            else{
+                              var class_css="badge badge-outline-danger";
+                              var status_value="Completed";
+                            }
+                          }
 
                       %>
 
@@ -266,7 +273,8 @@
                         %>
 
                         <td>
-                          <a href="/voter/eview/<%= election.election_id %>"> <button type="button" class="btn btn-info btn-fw"> View Candidates </button>
+                        
+                          <a href="/voter/eview/<%= election.election_id %>" class="btn btn-primary ">View Info </a>
                         </td>
 
                         <% 
@@ -283,7 +291,7 @@
                         %>
 
                         <td>
-                          <a href="/voter/evote/<%= election.election_id %>"> <button type="button" class="btn btn-info btn-fw">Vote</button>
+                          <a href="/voter/evote/<%= election.election_id %>" class="btn btn-info">Vote</a>
                         </td>
 
                         <% 
@@ -293,7 +301,7 @@
                         %>
 
                         <td>
-                          <a href="/voter/evote/<%= election.election_id %>"> <button type="button" class="btn btn-info btn-fw" disabled> Already Voted </button>
+                          <a href="/voter/evote/<%= election.election_id %>"> <button type="button" class="btn btn-danger" disabled> Already Voted </button>
                         </td>
 
                         <%
@@ -305,10 +313,32 @@
                           {
                         
                         %>
-
-                        <td>
-                          <a href="/voter/eresult/<%= election.election_id %>"> <button type="button" class="btn btn-info btn-fw">View Result</button>
-                        </td>
+                            <%if(election.published == "yes") {%>
+                              <td>
+                                      <button type="button" class="btn btn-info dropdown-toggle"
+                                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Action
+                                  </button>
+                                    <div class="dropdown-menu">
+                                        
+                                        <%if(election.status == "completed"){%>
+                                        <a class="dropdown-item"
+                                            href="/voter/eresult/<%= election.election_id  %>">View Results</a>
+                                        <% }if(election.published == "yes"){ %>
+                                            
+                                            <a class="dropdown-item"
+                                        href="/downloads/<%= election.election_id  %>.pdf">Download</a>
+                                        
+                                        <%}%>
+                                    </div>
+                                </td>
+                              
+                              <% }else {%>
+                                <td>
+                                <a href="/voter/eresult/<%= election.election_id %>"> <button type="button" class="btn btn-info btn-fw invisible">Completed</button>
+                              </td>
+                                <%} %>
+              
 
                         <% 
                           } 
