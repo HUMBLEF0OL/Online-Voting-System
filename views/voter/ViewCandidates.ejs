@@ -183,20 +183,18 @@
                             for(let i = 0; i < dataToDisplay.length;)
                             {
                     %>
-                                <div class="row ">
+                                <div class="row mx-auto" style="width: 80%;">
                                     <div class="col-12 grid-margin" style="width:100%;">
                                         <div class="card">
                                             <div class="card-body">
                                                 <h3 class="card-title"> <%= dataToDisplay[i].position_name %> </h3>
                                                 <div class="table-responsive">
-                                                    <table class="table">
+                                                    <table class="table ">
                                                         <thead>
                                                             <tr>
                                                                 <th> First Name </th>
-                                                                <th> Last Name </th>
-                                                                <th> Phone number </th>
-                                                                <th> email </th>
-                                                                <th> Candidate Status </th>
+                                                                <th > Last Name </th>
+                                                                <th > Candidate Status </th>
                                                             </tr>
                                                         </thead>                                              
                                                         <tbody>
@@ -215,8 +213,6 @@
                                                                     <span class="pl-2"> <%= dataToDisplay[j].firstname %> </span>
                                                                 </td>
                                                                 <td> <%= dataToDisplay[j].lastname %> </td>
-                                                                <td> <%= dataToDisplay[j].phonenumber %> </td>
-                                                                <td> <%= dataToDisplay[j].email %> </td>
                                                                 <td>
 
                                                                     <%
