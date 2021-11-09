@@ -238,24 +238,23 @@
                           return formattedDate;
                         }
 
-                        for(let j = 0; j < 5; j++){
-                        var election = elections[i];
+                        for(let j = 0; j < 5 && j < elections.length; j++){
                         var class_css="";
                         var status_value="";
-                        if (election.status=="not_started")
+                        if (elections[j].status=="not_started")
                         {                          
                           var class_css="badge badge-outline-warning";
                           var status_value="Not Started";
                         }   
-                        else if (election.status=="running")
+                        else if (elections[j].status=="running")
                         {
                           var class_css="badge badge-outline-success";
                           var status_value="running";
 
                         }
-                        else if (election.status=="completed")
+                        else if (elections[j].status=="completed")
                           {  
-                            if(election.published == "yes")                        
+                            if(elections[j].published == "yes")                        
                             {
                               var class_css="badge badge-outline-primary";
                               var status_value="Published";
@@ -269,11 +268,11 @@
                       %>
 
                       <tr>                      
-                        <td> <%= election.title %> </td>
-                        <td> <%= dateconversion(election.start_date) %> </td>
-                        <td> <%= election.start_time %> </td>
-                        <td> <%= dateconversion(election.stop_date) %> </td>
-                        <td> <%= election.stop_time %> </td>
+                        <td> <%= elections[j].title %> </td>
+                        <td> <%= dateconversion(elections[j].start_date) %> </td>
+                        <td> <%= elections[j].start_time %> </td>
+                        <td> <%= dateconversion(elections[j].stop_date) %> </td>
+                        <td> <%= elections[j].stop_time %> </td>
                         <td> <div class="<%= class_css %> "><%= status_value %></div>
                         
                           
@@ -281,30 +280,30 @@
                         </td>
 
                         <%                        
-                          if (election.status=="not_started")
+                          if (elections[j].status=="not_started")
                           {
                         %>
 
                         <td>
                         
-                          <a href="/voter/eview/<%= election.election_id %>" class="btn btn-primary ">View Info </a>
+                          <a href="/voter/eview/<%= elections[j].election_id %>" class="btn btn-primary ">View Info </a>
                         </td>
 
                         <% 
                           }
 
-                          else if (election.status=="running")
+                          else if (elections[j].status=="running")
                           {
                             for(let i = 0; i < hasVoted.length; i++)
                             {
-                              if(hasVoted[i].election_id === election.election_id)
+                              if(hasVoted[i].election_id === elections[j].election_id)
                               {
                                 if(hasVoted[i].hasVoted === false && hasVoted[i].toShowElection === true)
                                 {                            
                         %>
 
                         <td>
-                          <a href="/voter/evote/<%= election.election_id %>" class="btn btn-info">Vote</a>
+                          <a href="/voter/evote/<%= elections[j].election_id %>" class="btn btn-info">Vote</a>
                         </td>
 
                         <% 
@@ -314,7 +313,7 @@
                         %>
 
                         <td>
-                          <a href="/voter/evote/<%= election.election_id %>"> <button type="button" class="btn btn-danger" disabled> Already Voted </button>
+                          <a href="/voter/evote/<%= elections[j].election_id %>"> <button type="button" class="btn btn-danger" disabled> Already Voted </button>
                         </td>
 
                         <%
@@ -322,11 +321,11 @@
                               }
                             }
                           }                        
-                          else if (election.status=="completed")
+                          else if (elections[j].status=="completed")
                           {
                         
                         %>
-                            <%if(election.published == "yes") {%>
+                            <%if(elections[j].published == "yes") {%>
                               <td>
                                       <button type="button" class="btn btn-info dropdown-toggle"
                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -334,13 +333,13 @@
                                   </button>
                                     <div class="dropdown-menu">
                                         
-                                        <%if(election.status == "completed"){%>
+                                        <%if(elections[j].status == "completed"){%>
                                         <a class="dropdown-item"
-                                            href="/voter/eresult/<%= election.election_id  %>">View Results</a>
-                                        <% }if(election.published == "yes"){ %>
+                                            href="/voter/eresult/<%= elections[j].election_id  %>">View Results</a>
+                                        <% }if(elections[j].published == "yes"){ %>
                                             
                                             <a class="dropdown-item"
-                                        href="/downloads/<%= election.election_id  %>.pdf">Download</a>
+                                        href="/downloads/<%= elections[j].election_id  %>.pdf">Download</a>
                                         
                                         <%}%>
                                     </div>
@@ -348,7 +347,7 @@
                               
                               <% }else {%>
                                 <td>
-                                <a href="/voter/eresult/<%= election.election_id %>"> <button type="button" class="btn btn-info btn-fw" disabled>Completed</button>
+                                <a href="/voter/eresult/<%= elections[j].election_id %>"> <button type="button" class="btn btn-info btn-fw" disabled>Completed</button>
                               </td>
                                 <%} %>
               

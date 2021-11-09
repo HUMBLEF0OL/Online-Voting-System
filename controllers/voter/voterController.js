@@ -105,6 +105,10 @@ const voter_dashboard_get = async  function(req,res)
         }
     });
 
+    // for(let i = 0;i< elections.length;i++)
+    // {
+    //     console.log(elections[i].status);
+    // }
     let alert = null;
     if(!_.isEmpty(req.query.alert))
         alert = req.query.alert;
