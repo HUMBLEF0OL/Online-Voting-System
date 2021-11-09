@@ -38,7 +38,7 @@ const voter_dashboard_get = async  function(req,res)
 {
     var election_stats={};
     const elections = await db.election_data.findAll({
-        limit: 5,
+        limit: 10,
         order: [[
             'start_date','DESC'
         ]]
@@ -56,8 +56,25 @@ const voter_dashboard_get = async  function(req,res)
                 user_id : userID
             }
         });
+
+        let toShowElection = false;
+        if(elections[i].status === 'running')
+        {
+            const checker = await db.roll_data.findOne({
+                where:{
+                    election_id: elections[i].election_id,
+                    user_id: userID
+                }
+            });
+
+            if(!_.isEmpty(checker))
+            {
+                toShowElection = true;
+            }
+        }
         hasVoted[i] = new Object();
         hasVoted[i]['election_id'] = elections[i].election_id;
+        hasVoted[i]['toShowElection'] = toShowElection;
 
         if(check !== null)
         {
@@ -88,6 +105,10 @@ const voter_dashboard_get = async  function(req,res)
         }
     });
 
+    // for(let i = 0;i< elections.length;i++)
+    // {
+    //     console.log(elections[i].status);
+    // }
     let alert = null;
     if(!_.isEmpty(req.query.alert))
         alert = req.query.alert;
