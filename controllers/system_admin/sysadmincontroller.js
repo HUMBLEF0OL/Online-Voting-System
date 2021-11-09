@@ -83,7 +83,8 @@ var free_s;
 var total_s;
 
 //check Storage
-checkDiskSpace('C:/').then((diskSpace) => {
+// for windows the path should be 'C:/' and for linux it will be '/'
+checkDiskSpace('/').then((diskSpace) => {
   free_s = niceBytes(diskSpace.free);
   total_s = niceBytes(diskSpace.size);
 

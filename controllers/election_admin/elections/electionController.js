@@ -215,12 +215,19 @@ async function calculate_result(eid)
     }
     const puppeteer = require('puppeteer');
 
-
-    const browser = await puppeteer.launch();
+    // for linux server we have to explicitly install the chromium-engine
+    // const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      executablePath: '/usr/bin/chromium-browser'
+    })
           const page = await browser.newPage();
-          await page.goto('http://localhost:3000/election/eview_raw/'+eid+'.pdf', {
+          // for local machine
+          // http://localhost:3000/election/eview_raw/
+          // we need to update th url according to the website link
+          await page.goto('http://ec2-3-144-150-67.us-east-2.compute.amazonaws.com/election/eview_raw/'+eid, {
             waitUntil: 'networkidle2',
           });
+
           await page.pdf({ path: 'public/downloads/'+eid+'.pdf', format: 'a4' });
         
           await browser.close();
