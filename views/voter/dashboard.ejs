@@ -238,7 +238,8 @@
                           return formattedDate;
                         }
 
-                        elections.forEach(function(election){
+                        for(let j = 0; j < 5; j++){
+                        var election = elections[i];
                         var class_css="";
                         var status_value="";
                         if (election.status=="not_started")
@@ -298,7 +299,7 @@
                             {
                               if(hasVoted[i].election_id === election.election_id)
                               {
-                                if(hasVoted[i].hasVoted === false)
+                                if(hasVoted[i].hasVoted === false && hasVoted[i].toShowElection === true)
                                 {                            
                         %>
 
@@ -308,7 +309,7 @@
 
                         <% 
                                 }
-                                else
+                                else if(hasVoted[i].hasVoted === true && hasVoted[i].toShowElection === true)
                                 {
                         %>
 
@@ -347,7 +348,7 @@
                               
                               <% }else {%>
                                 <td>
-                                <a href="/voter/eresult/<%= election.election_id %>"> <button type="button" class="btn btn-info btn-fw invisible">Completed</button>
+                                <a href="/voter/eresult/<%= election.election_id %>"> <button type="button" class="btn btn-info btn-fw" disabled>Completed</button>
                               </td>
                                 <%} %>
               
@@ -357,9 +358,9 @@
                         %>
                       </tr>
 
-                      <!-- closing Election for Each loop-->
+                      <!-- closing Election for loop-->
                       <% 
-                        });
+                        }
                       %>
 
                       </tbody>
