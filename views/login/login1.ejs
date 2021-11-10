@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Login Page</title>
+    <title>Login</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
@@ -16,49 +16,56 @@
     <!-- Layout styles -->
     <link rel="stylesheet" href="css/style.css">
     <!-- End layout styles -->
-    <link rel="shortcut icon" href="images/login.png" />
+    <link rel="shortcut icon" href="images/login_favicon.jpg" />
+    <style>
+      body {
+        overflow-y: hidden; /* Hide vertical scrollbar */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+    </style>
+
   </head>
   <body>
     
     <div class="container-scroller">
       <div class="container-fluid page-body-wrapper full-page-wrapper">
         
-        <div class="row w-100 m-0">
+        <div class="row w-100">
           
           <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
-            <div class="card col-lg-4 mx-auto">
-              <div class="card-body px-5 py-5">
-                
-                <div class="card text-center border-primary mb-2">
+            <div class="card col-lg-4 mx-auto bg-white">
+              <div class="card-body px-5 py-1 ">
+                <!-- border-primary mb-2 -->
+                <div class="text-center ">
       
-                  <div class="card-body">
-                    <h5 class="card-title">University Of Delhi</h5>
-                    <p class="card-text text-primary">Online Voting System</p>
+                  <div class="card-body bg-white align-items-center mt-8">
+                    <img src="images/login_favicon.jpg" alt="logo" height="150" width="150">
+                    <h4 class="card-text text-primary mt-4">Online Voting System</h4>
                   </div>
                   
                 </div>
 
 
-                <h3 class="card-title text-left mb-3">Login</h3>
+                <!-- <h3 class="card-title text-left mb-3">Login</h3> -->
 
                 <%- include ('./partials/messages') %>
 
                 <form id="login-form" action="/user/login" method="POST"  role="form">
                   <div class="form-group">
-                    <label>email *</label>
-                    <input type="text" class="form-control p_input" name="email" required = "required" data-error="Enter a Valid email.">
+                    <label class="text-black">Email *</label>
+                    <input type="text" class="form-control p_input text-black bg-secondary" placeholder="Please enter registered Email" name="email" required = "required" data-error="Enter a Valid email.">
                   </div>
                   <div class="form-group">
-                    <label>Password *</label>
-                    <input type="password" class="form-control p_input" name="password" required = "required" data-error="Valid Password is requried.">
+                    <label class="text-black">Password *</label>
+                    <input type="password" class="bg-secondary text-black form-control p_input" placeholder="password" name="password" required = "required" data-error="Valid Password is requried.">
                   </div>
-                  <div class="form-group d-flex align-items-center justify-content-between">
+                  <!-- <div class="form-group d-flex align-items-center justify-content-between">
                     <div class="form-check">
                       <label class="form-check-label">
                         <input type="checkbox" class="form-check-input"> Remember me </label>
                     </div>
                     <a href="#" class="forgot-pass">Forgot password</a>
-                  </div>
+                  </div> -->
                   <div class="text-center">
                     <button type="submit" class="btn btn-primary btn-block enter-btn" >Login</button>
                   </div>
